@@ -6,24 +6,38 @@ const port = 4200;
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
+const allColumns = [
+    '_id', '_date', '_user', 'vx_avg_res_time', 'vx_shot_accuracy', 'vx_trg_accuracy',
+    
+];
+
 
 app.get('/data', async (req, res) => {
-    const { limit = 10 } = req.query;
+    const { limit = 10, columns } = req.query;
     try {
-        res.set({
-            'Cache-Control': 'no-cache, no-store, must-revalidate', // Prevent caching of any kind
-            'Pragma': 'no-cache', // HTTP 1.0.
-            'Expires': '0' // Proxies.
-        });
         const dataText = await fs.readFile('test_data.txt', 'utf8');
-        const data = JSON.parse(dataText).slice(0, Number(limit));
-        res.render('dataPage', { data, limit: Number(limit) });
+        let data = JSON.parse(dataText).slice(0, Number(limit));
+        
+        // If specific columns are selected, filter the objects to only include these columns
+        if (columns && columns.length) {
+            data = data.map(item => {
+                const filteredItem = {};
+                columns.forEach(col => {
+                    if (item.hasOwnProperty(col)) {
+                        filteredItem[col] = item[col];
+                    }
+                });
+                return filteredItem;
+            });
+        }
 
+        res.render('dataPage', { data, limit: Number(limit), allColumns, selectedColumns: columns || allColumns });
     } catch (error) {
         console.error(error);
         res.status(500).send('Error reading data file');
     }
 });
+
 
 
 app.listen(port, () => {

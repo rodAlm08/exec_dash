@@ -1,39 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Display</title>
-</head>
-<body>
-    <h1>Data Display</h1>
-    <form action="/data" method="GET">
-        <select name="limit" onchange="this.form.submit()">
-            <option value="10" <%= limit == 10 ? 'selected' : '' %>>10 lines</option>
-            <option value="25" <%= limit == 25 ? 'selected' : '' %>>25 lines</option>
-            <option value="50" <%= limit == 50 ? 'selected' : '' %>>50 lines</option>
-        </select>
-        
-    </form>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Date</th>
-            <th>User</th>
-            <th>VX Avg Res Time</th>
-            <th>VX Shot Accuracy</th>
-            <!-- Add more headers as needed -->
-        </tr>
-        <% data.forEach(function(item) { %>
-        <tr>
-            <td><%= item._id %></td>
-            <td><%= item._date %></td>
-            <td><%= item._user %></td>
-            <td><%= item.vx_avg_res_time %></td>
-            <td><%= item.vx_shot_accuracy %></td>
-            <!-- Add more data columns as needed -->
-        </tr>
+<link rel="stylesheet" href="/css/style.css">
+
+<form action="/data" method="GET">
+    <% allColumns.forEach(function(col) { %>
+        <input type="checkbox" name="columns" value="<%= col %>" 
+            <%= selectedColumns.includes(col) ? 'checked' : '' %>>
+        <label><%= col %></label>
+    <% }); %>
+    <select name="limit" onchange="this.form.submit()">
+        <option value="10" <%= limit == 10 ? 'selected' : '' %>>10 lines</option>
+        <option value="25" <%= limit == 25 ? 'selected' : '' %>>25 lines</option>
+        <option value="50" <%= limit == 50 ? 'selected' : '' %>>50 lines</option>
+    </select>
+    <button type="submit">Update</button>
+</form>
+
+<table border="1">
+    <tr>
+        <% selectedColumns.forEach(function(col) { %>
+            <th><%= col %></th>
         <% }); %>
-    </table>
-</body>
-</html>
+    </tr>
+    <% data.forEach(function(item) { %>
+    <tr>
+        <% selectedColumns.forEach(function(col) { %>
+            <td><%= item[col] %></td>
+        <% }); %>
+    </tr>
+    <% }); %>
+</table>
