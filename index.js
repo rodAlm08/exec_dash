@@ -1,10 +1,12 @@
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors');
 const app = express();
 const port = 4200;
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+app.use(cors());
 
 // const allColumns = [
 //     '_id', '_date', '_user', 'vx_avg_res_time', 'vx_shot_accuracy', 'vx_trg_accuracy',
