@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
 
-app.get('/', async (req, res) => {
+app.get('/dashboard', async (req, res) => {
     try {
         const response = await axios.get('https://zerofourtwo.net/api/dataset');
         //res.render('./dataPage', { data: data });
