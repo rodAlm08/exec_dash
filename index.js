@@ -4,31 +4,34 @@ const cors = require('cors');
 const app = express();
 const port = 4200;
 
-app.set('view engine', 'ejs');
-app.use(express.static('public'));
 app.use(cors());
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); 
+app.set('view engine', 'ejs');
 
-// const allColumns = [
-//     '_id', '_date', '_user', 'vx_avg_res_time', 'vx_shot_accuracy', 'vx_trg_accuracy',
-    
-// ];
+
 
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
 
-app.get('/dashboard', async (req, res) => {
+app.get('/dashboard', (req, res) => {
     try {
-        const response = await axios.get('https://zerofourtwo.net/api/dataset');
-        //res.render('./dataPage', { data: data });
-        console.log('**********************************', response.data)
-        res.render('./dataPage',{data: response.data}) 
-        
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Failed to fetch data');
-    }
+        const columns = Object.keys(data[0]);
+
+        // const response = await axios.get('https://zerofourtwo.net/api/dataset');
+         res.render('./dataPage', { data: data , columns: columns, req: req});
+         //console.log('**********************************', response.data)
+         //res.render('./dataPage',{data: response.data}) 
+         
+     } catch (error) {
+         console.error(error);
+         res.status(500).send('Failed to fetch data');
+     }
+    
 });
+
 
 data = [{
     "_id": 1,
@@ -88,6 +91,230 @@ data = [{
     "vx_shot_accuracy": 48.4375,
     "vx_trg_accuracy": 75.6098,
     "au_avg_res_time": 2148,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
+    "bm_HR_max": null,
+    "bm_HR_avg": null,
+    "bm_HR_var": null,
+    "bm_act_steps": null,
+    "bm_sleep": null
+},
+{
+    "_id": 5,
+    "_date": null,
+    "_user": "jjj",
+    "fm_avg_trk_time": 3,
+    "fm_accuracy": 80,
+    "vx_avg_res_time": 2,
+    "vx_shot_accuracy": 58.0645,
+    "vx_trg_accuracy": 83.7209,
+    "au_avg_res_time": 1875,
     "bm_HR_max": null,
     "bm_HR_avg": null,
     "bm_HR_var": null,

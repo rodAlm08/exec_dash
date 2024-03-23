@@ -1,27 +1,128 @@
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<!DOCTYPE html>
+<html lang="en">
 
-<table>
-    <% var columns=Object.keys(data[0]) %>
-        <tr>
-            <% for(var i=0; i < Object.keys(data[0]).length; i++) { %>
-                <th>
-                    <%= columns[i] %>
-                </th>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
 
-                <% } %>
-        </tr>
-        
-            <% for(var i=0; i < data.length; i++) {  %>
-                <tr>
-                    <% for(var j = 0; j < Object.values(data[i]).length; j++ ){ %>
+<body>
 
-                    <td>
-                        <%= Object.values(data[i])[j] %>
-                    </td>
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <form id="dashboardForm" action="/dashboard" method="GET">
+                    <div class="form-group">
+                        <label>Select columns to display:</label>
+                        <!-- Buttons to select or deselect all checkboxes -->
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-primary select-all-btn">Select All</button>
+                            <button type="button" class="btn btn-secondary deselect-all-btn">Deselect All</button>
+                        </div>
+                        <div class="border p-3">
+                            <% columns.forEach(column => { %>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input column-checkbox" type="checkbox" name="columns"
+                                        value="<%= column %>"
+                                        <%= Array.isArray(req.query.columns) && req.query.columns.includes(column)
+                                        ? 'checked' : '' %>>
+                                    <label class="form-check-label">
+                                        <%= column %>
+                                    </label>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
 
-                    <% } %>
-                </tr>
-            <% } %>
-       
-</table>
+                    <div class="form-group">
+                        <label>Rows to display:</label>
+                        <select id="rowsSelect" name="rows" class="form-control" style="width: auto;">
+                            <option value="10" <%= req.query.rows == '10' ? 'selected' : '' %>>10</option>
+                            <option value="20" <%= req.query.rows == '20' ? 'selected' : '' %>>20</option>
+                            <option value="50" <%= req.query.rows == '50' ? 'selected' : '' %>>50</option>
+                        </select>
+                    </div>
+                  
+                </form>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+
+            <table class="table" id="dataTable">
+                <thead>
+                    <tr>
+                        <% columns.forEach(column => { %>
+                            <% if (!req.query.columns || req.query.columns.includes(column)) { %>
+                                <th>
+                                    <%= column %>
+                                </th>
+                            <% } %>
+                        <% }) %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.slice(0, parseInt(req.query.rows) || 10).forEach(row => { %>
+                        <tr>
+                            <% columns.forEach(column => { %>
+                                <% if (!req.query.columns || req.query.columns.includes(column)) { %>
+                                    <td>
+                                        <%= row[column] %>
+                                    </td>
+                                <% } %>
+                            <% }) %>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get select all and deselect all buttons
+            const selectAllBtn = document.querySelector('.select-all-btn');
+            const deselectAllBtn = document.querySelector('.deselect-all-btn');
+    
+            // Get all checkboxes
+            const checkboxes = document.querySelectorAll('.column-checkbox');
+    
+            // Add event listener to select all button
+            selectAllBtn.addEventListener('click', function () {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = true;
+                });
+                // Trigger form submission
+                document.getElementById('dashboardForm').submit();
+            });
+    
+            // Add event listener to deselect all button
+            deselectAllBtn.addEventListener('click', function () {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                // Trigger form submission
+                document.getElementById('dashboardForm').submit();
+            });
+    
+            // Add event listener to column checkboxes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    // Trigger form submission
+                    document.getElementById('dashboardForm').submit();
+                });
+            });
+    
+            // Add event listener to rows select
+            document.getElementById('rowsSelect').addEventListener('change', function () {
+                // Trigger form submission
+                document.getElementById('dashboardForm').submit();
+            });
+        });
+    </script>
+</body>
+
+</html>
