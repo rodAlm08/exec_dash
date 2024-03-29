@@ -4,33 +4,101 @@ const cors = require('cors');
 const app = express();
 const port = 4200;
 
+
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); 
 app.set('view engine', 'ejs');
 
-
-
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
 
-app.get('/dashboard', (req, res) => {
-    try {
-        const columns = Object.keys(data[0]);
 
-        // const response = await axios.get('https://zerofourtwo.net/api/dataset');
-         res.render('./dataPage', { data: data , columns: columns, req: req});
-         //console.log('**********************************', response.data)
-         //res.render('./dataPage',{data: response.data}) 
-         
+
+app.get('/dashboard', async (req, res) => {
+    try {       
+
+        //console.log('**********************************', req.query);
+        const qp = Object.keys(req.query).length == 0 ? Object.keys(data[0]) : Object.keys(req.query)
+       // .map(key => `${key}=${req.query[key]}`)
+        //.join('&');
+
+        console.log('queryparams >>>>>', qp);
+
+        const apiUrl = 'https://zerofourtwo.net/api/dataset?' + qp;
+        //console.log('apiUrl >>>>>', apiUrl);
+
+        //const response = await axios.get('https://zerofourtwo.net/api/dataset');
+         const columns = Object.keys(data[0]);
+         //console.log('**********************************', response);
+         //const columns = Object.keys(response.data[0]);
+        //console.log('**********************************', columns
+        let bag = data;
+        let colBag = []
+
+        for(let i =0; i < qp.length; i++){
+            if(qp[i] == 'submit' || qp[i] == 'rows'){
+            } else {
+                colBag.push(qp[i]);
+            }   
+        }
+        
+        console.log('ColBAG', colBag);
+
+        for(let i =0; i < qp.length; i++){       
+            if(colBag.includes(qp[i])){                
+            }else{
+                bag = removeColumn(bag, qp[i]);
+            }
+        }
+
+        console.log('bagggggg >>>>>', bag);
+
+        res.render('./dataPage', { data:bag , columns: colBag, req: req});
+        //console.log('**********************************', response.data)
+                 
      } catch (error) {
          console.error(error);
          res.status(500).send('Failed to fetch data');
      }
     
 });
+
+
+function removeColumn(matrix, columnIndex) {
+   for(let i = 0; i < matrix.length; i++){
+       //console.log(columnIndex, Object.keys(matrix[i]).indexOf(columnIndex));
+        //delete matrix[i][Object.keys(matrix[i]).indexOf(columnIndex)];
+        delete matrix[i][columnIndex];
+    };
+    console.log('matrix', matrix.length)
+    return matrix
+}
+
+// Submit Data
+app.post('/submit-data', (req, res) => {
+   
+    console.log(req.body); 
+    res.redirect('/'); 
+});
+
+app.get('/syncData', async (req, res) => {
+    try {
+       
+        const updatedData = await getData();
+        // For full page reload:
+        res.render('yourTemplate', { data: updatedData });
+
+        // For AJAX response:
+        // res.json(updatedData);
+    } catch (error) {
+        console.error('Failed to sync data:', error);
+        res.status(500).send('Failed to sync data');
+    }
+});
+
 
 
 data = [{
@@ -338,27 +406,7 @@ data = [{
     "bm_sleep": null
 }]
 
-// // Submit Data
-// app.post('/submit-data', (req, res) => {
-   
-//     console.log(req.body); 
-//     res.redirect('/'); 
-// });
 
-// app.get('/syncData', async (req, res) => {
-//     try {
-       
-//         const updatedData = await getData();
-//         // For full page reload:
-//         res.render('yourTemplate', { data: updatedData });
-
-//         // For AJAX response:
-//         // res.json(updatedData);
-//     } catch (error) {
-//         console.error('Failed to sync data:', error);
-//         res.status(500).send('Failed to sync data');
-//     }
-// });
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
