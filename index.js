@@ -15,26 +15,32 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
 
-
-
 app.get('/dashboard', async (req, res) => {
     try {       
-
-        //console.log('**********************************', req.query);
-        const qp = Object.keys(req.query).length == 0 ? Object.keys(data[0]) : Object.keys(req.query)
-       // .map(key => `${key}=${req.query[key]}`)
-        //.join('&');
+        
+        const qp = Object.keys(req.query).length == 0 ? Object.keys(data[0]) : Object.keys(req.query)       
 
         console.log('queryparams >>>>>', qp);
 
+        
         const apiUrl = 'https://zerofourtwo.net/api/dataset?' + qp;
         //console.log('apiUrl >>>>>', apiUrl);
 
         //const response = await axios.get('https://zerofourtwo.net/api/dataset');
          const columns = Object.keys(data[0]);
+
          //console.log('**********************************', response);
          //const columns = Object.keys(response.data[0]);
-        //console.log('**********************************', columns
+        //console.log('**********************************', columns)
+
+        let selectedColumns = req.query.columns;
+        console.log('selectedColumns', selectedColumns);
+        if (typeof selectedColumns === 'string') {
+            selectedColumns = [selectedColumns];
+        } else if (!selectedColumns) {
+            selectedColumns = columns; 
+        }
+
         let bag = data;
         let colBag = []
 
@@ -53,10 +59,13 @@ app.get('/dashboard', async (req, res) => {
                 bag = removeColumn(bag, qp[i]);
             }
         }
+        console.log(columns);
 
-        console.log('bagggggg >>>>>', bag);
-
-        res.render('./dataPage', { data:bag , columns: colBag, req: req});
+        res.render('./dataPage', { 
+            data:bag , 
+            columns: selectedColumns, 
+            selectedColumns: selectedColumns, 
+            req: req});
         //console.log('**********************************', response.data)
                  
      } catch (error) {

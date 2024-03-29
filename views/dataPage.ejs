@@ -20,28 +20,31 @@
                         <!-- Buttons to select or deselect all checkboxes -->
                         <div class="mt-3">
                             <button type="button" class="btn btn-primary select-all-btn">Select All</button>
-                            <button type="button" class="btn btn-secondary deselect-all-btn">Deselect All</button>                          
-                            
+                            <button type="button" class="btn btn-secondary deselect-all-btn">Deselect All</button>
+
                         </div>
-                        
+
                         <div class="border p-3">
                             <% columns.forEach(column=> { %>
-                                <div class="form-check form-check-inline" id="checkbox">
-                                    <input class="form-check-input column-checkbox" type="checkbox" name="<%= column %>"
-                                        value="true" <%=Array.isArray(req.query.columns) &&
-                                        req.query.columns.includes(column) ? 'checked' : '' %>>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input column-checkbox" type="checkbox" name="columns"
+                                        value="<%= column %>" <%=selectedColumns.includes(column) ? 'checked' : '' %>>
                                     <label class="form-check-label">
                                         <%= column %>
                                     </label>
                                 </div>
                                 <% }) %>
-                                <button type="submit" name="submit" class="btn btn-success" id="sendToAI">Show Selected Columns</button>
+
+                                    <button type="submit" name="submit" class="btn btn-success" id="sendToAI">Show
+                                        Selected Columns</button>
+                                    <button type="button" class="btn btn-warning reset-columns-btn">Reset
+                                        Columns</button>
                         </div>
-                       
+
                     </div>
 
                     <div class="form-group d-flex justify-content-between align-items-center">
-                        
+
 
                         <select id="rowsSelect" name="rows" class="form-control" style="width: auto;">
                             <option value="10" <%=req.query.rows=='10' ? 'selected' : '' %>>10</option>
@@ -57,31 +60,24 @@
 
         </div>
         <div class="col-md-6">
-
             <table class="table" id="dataTable">
                 <thead>
                     <tr>
-                        <% columns.forEach(column=> { %>
-                            <% if (!req.query.columns || req.query.columns.includes(column)) { %>
-                                <th>
-                                    <%= column %>
-                                </th>
-                                <% } %>
-                                    <% }) %>
+                        <% selectedColumns.forEach(column=> { %>
+                            <th>
+                                <%= column %>
+                            </th>
+                            <% }) %>
                     </tr>
                 </thead>
                 <tbody>
-                    <% data.slice(0, parseInt(req.query.rows) || 10).forEach(row=> { %>
-                        <tr>
-                            <% columns.forEach(column=> { %>
-                                <% if (!req.query.columns || req.query.columns.includes(column)) { %>
-                                    <td>
-                                        <%= row[column] %>
-                                    </td>
-                                    <% } %>
-                                        <% }) %>
+                    <% data.forEach((row, index) => { %>
+                        <tr class="data-row"> <!-- Ensure this class is present -->
+                            <% selectedColumns.forEach(column => { %>
+                                <td><%= row[column] || '' %></td>
+                            <% }) %>
                         </tr>
-                        <% }) %>
+                    <% }) %>
                 </tbody>
             </table>
         </div>
@@ -89,46 +85,54 @@
     </div>
 
     <script>
+
         document.addEventListener('DOMContentLoaded', function () {
-            // Get select all and deselect all buttons
             const selectAllBtn = document.querySelector('.select-all-btn');
             const deselectAllBtn = document.querySelector('.deselect-all-btn');
-
-            // Get all checkboxes
+            const resetColumnsBtn = document.querySelector('.reset-columns-btn');
             const checkboxes = document.querySelectorAll('.column-checkbox');
+            const rowsSelect = document.getElementById('rowsSelect');
+            const dataRows = document.querySelectorAll('tr.data-row'); // Assuming each data row has 'data-row' class
 
-            // Add event listener to select all button
-            selectAllBtn.addEventListener('click', function () {
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = true;
+            // Function to update the visibility of data rows based on the selected number of rows
+            const updateVisibleRows = () => {
+                const numRowsToShow = parseInt(rowsSelect.value, 10);
+                dataRows.forEach((row, index) => {
+                    row.style.display = index < numRowsToShow ? '' : 'none';
                 });
-                // Trigger form submission
-                document.getElementById('dashboardForm').submit();
+            };
+
+            // Event listener for the 'Select All' button
+            selectAllBtn.addEventListener('click', () => {
+                checkboxes.forEach(checkbox => checkbox.checked = true);
             });
 
-            // Add event listener to deselect all button
-            deselectAllBtn.addEventListener('click', function () {
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-                // Trigger form submission
-                document.getElementById('dashboardForm').submit();
+            // Event listener for the 'Deselect All' button
+            deselectAllBtn.addEventListener('click', () => {
+                checkboxes.forEach(checkbox => checkbox.checked = false);
             });
 
-            // Add event listener to column checkboxes
+            // Event listener for the 'Reset Columns' button
+            resetColumnsBtn.addEventListener('click', () => {
+                window.location.href = '/dashboard'; // Redirect without any query parameters
+            });
+
+            // Event listener for any change in the checkboxes
             checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function () {
-                    // Trigger form submission
-                    document.getElementById('dashboardForm').submit();
+                checkbox.addEventListener('change', () => {
+                    // This could be modified if you decide to keep the form submission for column filtering
+                    // For now, we'll leave it as it directly affects visibility without submission
                 });
             });
 
-            // Add event listener to rows select
-            document.getElementById('rowsSelect').addEventListener('change', function () {
-                // Trigger form submission
-                document.getElementById('dashboardForm').submit();
-            });
+            // Adjust visibility of data rows when the selection changes
+            rowsSelect.addEventListener('change', updateVisibleRows);
+
+            // Initial adjustment of data rows visibility based on the default selection
+            updateVisibleRows();
         });
+
+
     </script>
 
 </body>
