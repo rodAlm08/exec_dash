@@ -21,25 +21,26 @@ app.get('/dashboard', async (req, res) => {
         const qp = Object.keys(req.query).length == 0 ? Object.keys(data[0]) : Object.keys(req.query)       
 
         console.log('queryparams >>>>>', qp);
-
         
         const apiUrl = 'https://zerofourtwo.net/api/dataset?' + qp;
         //console.log('apiUrl >>>>>', apiUrl);
 
         //const response = await axios.get('https://zerofourtwo.net/api/dataset');
-         const columns = Object.keys(data[0]);
+         const allColumns = Object.keys(data[0]);
+         const excludeColumns = ['_id', '_date', '_user'];
 
          //console.log('**********************************', response);
          //const columns = Object.keys(response.data[0]);
         //console.log('**********************************', columns)
 
-        let selectedColumns = req.query.columns;
-        console.log('selectedColumns', selectedColumns);
+        // Determine selected columns from query parameters or default to all (minus exclusions)
+        let selectedColumns = req.query.columns || allColumns;
         if (typeof selectedColumns === 'string') {
             selectedColumns = [selectedColumns];
-        } else if (!selectedColumns) {
-            selectedColumns = columns; 
         }
+        
+        // Filter out excluded columns from the selection
+        selectedColumns = selectedColumns.filter(column => !excludeColumns.includes(column));
 
         let bag = data;
         let colBag = []
@@ -59,7 +60,7 @@ app.get('/dashboard', async (req, res) => {
                 bag = removeColumn(bag, qp[i]);
             }
         }
-        console.log(columns);
+        console.log(allColumns);
 
         res.render('./dataPage', { 
             data:bag , 
@@ -78,9 +79,7 @@ app.get('/dashboard', async (req, res) => {
 
 function removeColumn(matrix, columnIndex) {
    for(let i = 0; i < matrix.length; i++){
-       //console.log(columnIndex, Object.keys(matrix[i]).indexOf(columnIndex));
-        //delete matrix[i][Object.keys(matrix[i]).indexOf(columnIndex)];
-        delete matrix[i][columnIndex];
+       delete matrix[i][columnIndex];
     };
     console.log('matrix', matrix.length)
     return matrix
