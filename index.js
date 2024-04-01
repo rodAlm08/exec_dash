@@ -4,6 +4,8 @@ const cors = require('cors');
 const app = express();
 const port = 4200;
 
+ 
+const { spawn } = require('child_process'); // this is to run the python script
 
 app.use(cors());
 app.use(express.static('public'));
@@ -21,9 +23,7 @@ app.get('/dashboard', async (req, res) => {
     try {       
         
         const qp = Object.keys(req.query).length == 0 ? Object.keys(data[0]) : Object.keys(req.query)       
-
-        console.log('queryparams >>>>>', qp);
-        
+        console.log('queryparams >>>>>', qp);        
         const apiUrl = 'https://zerofourtwo.net/api/dataset?' + qp;
         //console.log('apiUrl >>>>>', apiUrl);
 
@@ -39,8 +39,7 @@ app.get('/dashboard', async (req, res) => {
         let selectedColumns = req.query.columns || allColumns;
         if (typeof selectedColumns === 'string') {
             selectedColumns = [selectedColumns];
-        }
-        
+        }        
         // Filter out excluded columns from the selection
         selectedColumns = selectedColumns.filter(column => !excludeColumns.includes(column));
 
@@ -62,7 +61,10 @@ app.get('/dashboard', async (req, res) => {
                 bag = removeColumn(bag, qp[i]);
             }
         }
-        console.log(allColumns);
+        // check if data is filtered
+        
+
+        console.log(selectedColumns);
 
         res.render('./dataPage', { 
             data:bag , 
@@ -87,6 +89,27 @@ function removeColumn(matrix, columnIndex) {
     return matrix
 }
 
+// Endpoint for submitting data for Python analysis
+app.post('/analyze-data', (req, res) => {
+    // Convert the request data to a format suitable for your Python script
+    // This example assumes your Python script can handle JSON data directly
+    const dataToAnalyze = req.body;
+
+    const pythonProcess = spawn('python', ['./analyze_data.py', JSON.stringify(dataToAnalyze)]);
+
+    pythonProcess.stdout.on('data', (data) => {
+        // This assumes the Python script returns the path to the generated plot image
+        // Alternatively, if your Python script returns a Base64-encoded image, you would handle it accordingly
+        const result = data.toString();
+        res.json({plotPath: result.trim()}); // Send the plot image path back to the client
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+        res.status(500).send('Error during data analysis');
+    });
+});
+  
 // Submit Data
 app.post('/submit-data', (req, res) => {
    
