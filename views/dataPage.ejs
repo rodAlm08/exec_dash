@@ -88,7 +88,9 @@
 
         <div class="row mt-4">
             <div class="col-md-12">
-                <img src="http://localhost:5000" alt="Plot" class="img-fluid">
+                <img id="imageDisplay" src="" alt="Plot" class="img-fluid">
+                <br>
+                <button id="nextImageButton" class="btn btn-primary">Next Image</button>
             </div>
         </div>
 
@@ -105,6 +107,8 @@
             const checkboxes = document.querySelectorAll('.column-checkbox');
             const rowsSelect = document.getElementById('rowsSelect');
             const dataRows = document.querySelectorAll('tr.data-row'); // Assuming each data row has 'data-row' class
+            const imageDisplay = document.getElementById('imageDisplay');
+            const nextImageButton = document.getElementById('nextImageButton');
 
 
             // Function to update the visibility of data rows based on the selected number of rows
@@ -129,7 +133,23 @@
             resetColumnsBtn.addEventListener('click', () => {
                 window.location.href = '/dashboard'; // Redirect without any query parameters
             });
-
+            
+            // Function to load the next image
+            function loadNextImage() {
+                fetch('http://localhost:5000/')
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const imgSrc = doc.querySelector('img').src;
+                        imageDisplay.src = imgSrc;
+                    })
+                    .catch(error => {
+                        console.error('Error loading image:', error);
+                    });
+            }
+            // Initial load of the first image
+            loadNextImage();
             // Event listener for any change in the checkboxes
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', () => {
@@ -140,9 +160,14 @@
 
             // Adjust visibility of data rows when the selection changes
             rowsSelect.addEventListener('change', updateVisibleRows);
+            // Event listener for image click to load the next image
+            imageDisplay.addEventListener('click', loadNextImage);
+             // Event listener for next image button click
+             nextImageButton.addEventListener('click', loadNextImage);
 
             // Initial adjustment of data rows visibility based on the default selection
             updateVisibleRows();
+           
         });
 
 
