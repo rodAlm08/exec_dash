@@ -48,11 +48,11 @@
                         </div>
 
                     </div>
-                    <button type="submit" name="submit" class="btn btn-success" id="sendToAI">Show Selected
+                    <button type="submit" name="submit" value="filter" class="btn btn-success" id="sendToAI">Show Selected
                         Columns</button>
                     <button type="button" class="btn btn-warning reset-columns-btn">Reset Columns</button>
 
-                    <button type="button" class="btn btn-info" id="analyzeDataBtn">Analyze Data</button>
+                    <button type="button" class="btn btn-info" id="analyzeDataBtn">Clean Data</button>
                 </form>
 
             </div>
@@ -75,7 +75,7 @@
                             <tr class="data-row">
                                 <% selectedColumns.forEach(column=> { %>
                                     <td>
-                                        <%= row[column] || '' %>
+                                        <%= row[column] || 'null' %>
                                     </td>
                                     <% }) %>
                             </tr>
@@ -87,18 +87,18 @@
 
 
         <div class="row mt-4">
+            <button id="nextImageButton" class="btn btn-primary">Next Image</button>
+            
             <div class="col-md-12">
                 <img id="imageDisplay" src="" alt="Plot" class="img-fluid">
                 <br>
-                <button id="nextImageButton" class="btn btn-primary">Next Image</button>
+                
             </div>
         </div>
 
     </div>
 
     <script>
-
-
 
         document.addEventListener('DOMContentLoaded', function () {
             const selectAllBtn = document.querySelector('.select-all-btn');
@@ -153,8 +153,8 @@
             // Event listener for any change in the checkboxes
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', () => {
-                    // This could be modified if you decide to keep the form submission for column filtering
-                    // For now, we'll leave it as it directly affects visibility without submission
+                    
+                  
                 });
             });
 

@@ -19,75 +19,166 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
 
+function removeColumn(matrix, columnName) {
+    matrix.forEach(row => {
+        delete row[columnName];
+    });
+    return matrix;
+}
+
 app.get('/dashboard', async (req, res) => {
-    try {       
-        
-        const qp = Object.keys(req.query).length == 0 ? Object.keys(data[0]) : Object.keys(req.query)       
-        console.log('queryparams >>>>>', qp);        
-        const apiUrl = 'https://zerofourtwo.net/api/dataset?' + qp;
-        //console.log('apiUrl >>>>>', apiUrl);
-
-        //const response = await axios.get('https://zerofourtwo.net/api/dataset');
-         const allColumns = Object.keys(data[0]);
-         const excludeColumns = ['_id', '_date', '_user'];
-
-         //console.log('**********************************', response);
-         //const columns = Object.keys(response.data[0]);
-        //console.log('**********************************', columns)
-
-        // Determine selected columns from query parameters or default to all (minus exclusions)
-        let selectedColumns = req.query.columns || allColumns;
-        if (typeof selectedColumns === 'string') {
-            selectedColumns = [selectedColumns];
-        }        
-        // Filter out excluded columns from the selection
-        selectedColumns = selectedColumns.filter(column => !excludeColumns.includes(column));
-
-        let bag = data;
-        let colBag = []
-
-        for(let i =0; i < qp.length; i++){
-            if(qp[i] == 'submit' || qp[i] == 'rows'){
-            } else {
-                colBag.push(qp[i]);
-            }   
+    try {
+        if(req.params.submit === 'filter'){
+            // data = "zerofourtwo.net/api/dataset" + queryParams;
+        }else{
+            // data = "zerofourtwo.net/api/dataset";
         }
-        
-        console.log('ColBAG', colBag);
 
-        for(let i =0; i < qp.length; i++){       
-            if(colBag.includes(qp[i])){                
-            }else{
-                bag = removeColumn(bag, qp[i]);
+        // Determine the query parameters or default to all data columns
+        const allColumns = Object.keys(data[0]);
+        const queryParams = Object.keys(req.query).length === 0 ? allColumns : Object.keys(req.query);        
+
+        console.log('Query parameters:', queryParams);
+
+        // Define columns to exclude
+        const excludeColumns = ['_id', '_date', '_user'];
+
+        // Determine selected columns based on query parameters, excluding the ones to be ignored
+        var selectedColumns = req.query.columns ? [].concat(req.query.columns) : allColumns.filter(column => !excludeColumns.includes(column));
+
+        var filteredData = data;        
+
+        // Filter out unwanted query parameters (like 'submit', 'rows') and ensure they're not in selectedColumns
+        const relevantQueryParams = queryParams.filter(param => !['submit', 'rows'].includes(param) && selectedColumns.includes(param));
+
+        console.log('Selected Columns:', selectedColumns);          
+        relevantQueryParams.forEach(column => {
+            if (!selectedColumns.includes(column)) {
+                filteredData = removeColumn(filteredData, column);
             }
-        }
-        // check if data is filtered
+        });
+
+        res.render('./dataPage', {
+            data: filteredData,
+            columns: selectedColumns,
+            selectedColumns:selectedColumns, 
+            req:req 
+        });
+       
         
-
-        console.log(selectedColumns);
-
-        res.render('./dataPage', { 
-            data:bag , 
-            columns: selectedColumns, 
-            selectedColumns: selectedColumns, 
-            req: req});
-        //console.log('**********************************', response.data)
-                 
-     } catch (error) {
-         console.error(error);
-         res.status(500).send('Failed to fetch data');
-     }
-    
+    } catch (error) {
+        console.error('Failed to fetch data:', error);
+        res.status(500).send('Failed to fetch data');
+    }
 });
 
+// app.get('/dashboard', async (req, res) => {
+//     try {
+//         // Construct the API URL based on query parameters
+//         const queryParams = Object.keys(req.query).map(key => `${key}=${req.query[key]}`).join('&');
+//         const apiUrl = `https://zerofourtwo.net/api/dataset?${queryParams}`;
+        
+//         // Fetch data from the external API
+//         const response = await axios.get(apiUrl);
+//         let data = response.data; // Assuming the data is directly in the response body
 
-function removeColumn(matrix, columnIndex) {
-   for(let i = 0; i < matrix.length; i++){
-       delete matrix[i][columnIndex];
-    };
-    console.log('matrix', matrix.length)
-    return matrix
-}
+//         const allColumns = data.length > 0 ? Object.keys(data[0]) : [];
+        
+//         // Define columns to exclude
+//         const excludeColumns = ['_id', '_date', '_user'];
+//         let selectedColumns = req.query.columns ? [].concat(req.query.columns) : allColumns.filter(column => !excludeColumns.includes(column));
+
+//         // Apply column filtering based on selectedColumns
+//         data.forEach(row => {
+//             Object.keys(row).forEach(key => {
+//                 if (!selectedColumns.includes(key)) {
+//                     delete row[key];
+//                 }
+//             });
+//         });
+
+//         res.render('./dataPage', {
+//             data,
+//             columns: selectedColumns,
+//             selectedColumns:selectedColumns, 
+//             req:req 
+//         });
+//     } catch (error) {
+//         console.error('Failed to fetch data:', error);
+//         res.status(500).send('Failed to fetch data');
+//     }
+// });
+
+// app.get('/dashboard', async (req, res) => {
+   
+    
+//     try {       
+        
+//         const qp = Object.keys(req.query).length == 0 ? Object.keys(data[0]) : Object.keys(req.query)       
+//         console.log('queryparams >>>>>', qp);        
+//         const apiUrl = 'https://zerofourtwo.net/api/dataset?' + qp;
+//         //console.log('apiUrl >>>>>', apiUrl);
+
+//         //const response = await axios.get('https://zerofourtwo.net/api/dataset');
+//          const allColumns = Object.keys(data[0]);
+//          const excludeColumns = ['_id', '_date', '_user'];
+
+//          //console.log('**********************************', response);
+//          //const columns = Object.keys(response.data[0]);
+//         //console.log('**********************************', columns)
+
+//         // Determine selected columns from query parameters or default to all (minus exclusions)
+//         let selectedColumns = req.query.columns || allColumns;
+//         if (typeof selectedColumns === 'string') {
+//             selectedColumns = [selectedColumns];
+//         }        
+//         // Filter out excluded columns from the selection
+//         selectedColumns = selectedColumns.filter(column => !excludeColumns.includes(column));
+
+//         let bag = data;
+//         let colBag = []
+
+//         for(let i =0; i < qp.length; i++){
+//             if(qp[i] == 'submit' || qp[i] == 'rows'){
+//             } else {
+//                 colBag.push(qp[i]);
+//             }   
+//         }
+        
+//         console.log('ColBAG', colBag);
+
+//         for(let i =0; i < qp.length; i++){       
+//             if(colBag.includes(qp[i])){                
+//             }else{
+//                 bag = removeColumn(bag, qp[i]);
+//             }
+//         }       
+
+//         console.log(selectedColumns);        
+
+//         res.render('./dataPage', { 
+//             data:bag , 
+//             columns: selectedColumns, 
+//             selectedColumns: selectedColumns, 
+//             req: req
+//         });
+        
+                 
+//      } catch (error) {
+//          console.error(error);
+//          res.status(500).send('Failed to fetch data');
+//      }
+    
+// });
+
+
+// function removeColumn(matrix, columnIndex) {
+//    for(let i = 0; i < matrix.length; i++){
+//        delete matrix[i][columnIndex];
+//     };
+//     console.log('matrix', matrix.length)
+//     return matrix
+// }
 
 // Endpoint for submitting data for Python analysis
 app.post('/analyze-data', (req, res) => {
