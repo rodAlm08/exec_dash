@@ -24,16 +24,55 @@ function removeColumn(matrix, columnName) {
 }
 
 app.get('/dashboard', async (req, res) => {
+
+    const valuable = [
+        "_id",
+        "_date",
+        "_user",
+        "fm_avg_trk_time",
+        "fm_accuracy",
+        "vx_avg_res_time",
+        "vx_shot_accuracy",
+        "vx_trg_accuracy",
+        "au_avg_res_time",
+        "bm_HR_max",
+        "bm_HR_avg",
+        "bm_HR_var",
+        "bm_act_steps",
+        "bm_sleep",
+    ];
+
     try {
-        
-        
+        const allColumns = valuable;
+        console.log('All Columns:', allColumns);
+
         if(req.query.submit === 'filter'){
                 console.log('Queryparams', queryParams);
              data = await axios.get("https://zerofourtwo.net/api/dataset");
              
         } else if(req.query.submit === 'clean'){
             console.log('submit clean')
-            data = await axios.get("https://zerofourtwo.net/api/dataset" + queryParams);
+          
+            const qp = Object.keys(req.query).map(
+                key => {
+                        console.log('key', req.query[key])
+                        if(Array.isArray(req.query[key])){
+                            console.log('isArray');
+                            return req.query[key].map(k => `${key}=${k}`).join('&');
+                        } else {
+                            console.log('isNotArray');
+                            return `${key}=${req.query[key]}`
+                        }
+                    }
+                ).join('&');
+            const apiUrl = `https://zerofourtwo.net/api/dataset?${qp}`;
+            console.log('apiUrl', apiUrl);
+
+            // Fetch data from the external API
+            const response = await axios.get(apiUrl);
+            data = response;
+            console.log('data inside clean', data.data);
+            //data = await axios.get("https://zerofourtwo.net/api/dataset" + queryParams);
         }
         else{
             console.log('submit not filter')
@@ -42,10 +81,7 @@ app.get('/dashboard', async (req, res) => {
         }
 
         data = data.data;
-       
-        // console.log('Dataaaaaaaaaaaa:', data[0]);
-        // Determine the query parameters or default to all data columns
-        const allColumns = Object.keys(data[0]);
+
         const queryParams = Object.keys(req.query).length === 0 ? allColumns : Object.keys(req.query);        
 
         console.log('Query parameters:', queryParams);
@@ -77,7 +113,7 @@ app.get('/dashboard', async (req, res) => {
        
         
     } catch (error) {
-        //console.error('Failed to fetch data:', error);
+      //  console.error('Failed to fetch data:', error);
         res.status(500).send('Failed to fetch data');
     }
 });
