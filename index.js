@@ -15,9 +15,6 @@ app.use('/images', express.static('C:/Users/rodri/repos/exec_dash/images'));
 
 app.set('view engine', 'ejs');
 
-app.use(express.urlencoded({ extended: true }));
-app.set('view engine', 'ejs');
-
 
 function removeColumn(matrix, columnName) {
     matrix.forEach(row => {
@@ -28,12 +25,25 @@ function removeColumn(matrix, columnName) {
 
 app.get('/dashboard', async (req, res) => {
     try {
+        
+        
         if(req.params.submit === 'filter'){
-            // data = "zerofourtwo.net/api/dataset" + queryParams;
-        }else{
-            // data = "zerofourtwo.net/api/dataset";
+                console.log('Queryparams', queryParams);
+             data = await axios.get("https://zerofourtwo.net/api/dataset");
+             
+        } else if(req.params.submit === 'clean'){
+            console.log('submit clean')
+            data = await axios.get("https://zerofourtwo.net/api/dataset" + queryParams);
+        }
+        else{
+            console.log('submit not filter')
+            data = await axios.get("https://zerofourtwo.net/api/dataset");
+            //console.log('Data LINE 40:', data.data);
         }
 
+        data = data.data;
+       
+        // console.log('Dataaaaaaaaaaaa:', data[0]);
         // Determine the query parameters or default to all data columns
         const allColumns = Object.keys(data[0]);
         const queryParams = Object.keys(req.query).length === 0 ? allColumns : Object.keys(req.query);        
@@ -67,7 +77,7 @@ app.get('/dashboard', async (req, res) => {
        
         
     } catch (error) {
-        console.error('Failed to fetch data:', error);
+        //console.error('Failed to fetch data:', error);
         res.status(500).send('Failed to fetch data');
     }
 });
