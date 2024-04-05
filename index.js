@@ -1,11 +1,14 @@
+// require dotenv put the right path to the .env file
+require('dotenv').config({ path: './.env' });
+
+
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const app = express();
 const port = 4200;
+console.log('process.env', process.env.API_SECRET_KEY);
 
- 
-const { spawn } = require('child_process'); // this is to run the python script
 
 app.use(cors());
 app.use(express.static('public'));
@@ -14,7 +17,6 @@ app.use(express.json());
 app.use('/images', express.static('C:/Users/rodri/repos/exec_dash/images'));
 
 app.set('view engine', 'ejs');
-
 
 function removeColumn(matrix, columnName) {
     matrix.forEach(row => {
@@ -41,6 +43,9 @@ app.get('/dashboard', async (req, res) => {
         "bm_act_steps",
         "bm_sleep",
     ];
+    //console.log('precess.env', process.env.API_SECRET_KEY);
+    // create authorization header
+     const headers = {'Authorization': `Bearer ${process.env.API_SECRET_KEY}`};
 
     try {
         const allColumns = valuable;
@@ -48,7 +53,11 @@ app.get('/dashboard', async (req, res) => {
 
         if(req.query.submit === 'filter'){
                 console.log('Queryparams', queryParams);
-             data = await axios.get("https://zerofourtwo.net/api/dataset");
+           
+            // Fetch data from the external API
+            data = await axios.get("https://zerofourtwo.net/api/dataset", {headers});
+
+            // data = await axios.get("https://zerofourtwo.net/api/dataset");
              
         } else if(req.query.submit === 'clean'){
             console.log('submit clean')
@@ -69,14 +78,14 @@ app.get('/dashboard', async (req, res) => {
             console.log('apiUrl', apiUrl);
 
             // Fetch data from the external API
-            const response = await axios.get(apiUrl);
+            const response = await axios.get(apiUrl, {headers});
             data = response;
             console.log('data inside clean', data.data);
             //data = await axios.get("https://zerofourtwo.net/api/dataset" + queryParams);
         }
         else{
             console.log('submit not filter')
-            data = await axios.get("https://zerofourtwo.net/api/dataset");
+            data = await axios.get("https://zerofourtwo.net/api/dataset", {headers});
             //console.log('Data LINE 40:', data.data);
         }
 
