@@ -7,7 +7,6 @@ const axios = require('axios');
 const cors = require('cors');
 const app = express();
 const port = 4200;
-console.log('process.env', process.env.API_SECRET_KEY);
 
 
 app.use(cors());
@@ -55,9 +54,9 @@ app.get('/dashboard', async (req, res) => {
                 console.log('Queryparams', queryParams);
            
             // Fetch data from the external API
-            data = await axios.get("https://zerofourtwo.net/api/dataset", {headers});
+            data = await axios.get("http://localhost:3000/api/dataset", {headers});
 
-            // data = await axios.get("https://zerofourtwo.net/api/dataset");
+            // data = await axios.get("http://localhost:3000/api/dataset");
              
         } else if(req.query.submit === 'clean'){
             console.log('submit clean')
@@ -74,18 +73,18 @@ app.get('/dashboard', async (req, res) => {
                         }
                     }
                 ).join('&');
-            const apiUrl = `https://zerofourtwo.net/api/dataset?${qp}`;
+            const apiUrl = `http://localhost:3000/api/dataset?${qp}`;
             console.log('apiUrl', apiUrl);
 
             // Fetch data from the external API
             const response = await axios.get(apiUrl, {headers});
             data = response;
             console.log('data inside clean', data.data);
-            //data = await axios.get("https://zerofourtwo.net/api/dataset" + queryParams);
+            //data = await axios.get("http://localhost:3000/api/dataset" + queryParams);
         }
         else{
             console.log('submit not filter')
-            data = await axios.get("https://zerofourtwo.net/api/dataset", {headers});
+            data = await axios.get("http://localhost:3000/api/dataset", {headers});
             //console.log('Data LINE 40:', data.data);
         }
 
@@ -131,7 +130,7 @@ app.get('/dashboard', async (req, res) => {
 //     try {
 //         // Construct the API URL based on query parameters
 //         const queryParams = Object.keys(req.query).map(key => `${key}=${req.query[key]}`).join('&');
-//         const apiUrl = `https://zerofourtwo.net/api/dataset?${queryParams}`;
+//         const apiUrl = `http://localhost:3000/api/dataset?${queryParams}`;
         
 //         // Fetch data from the external API
 //         const response = await axios.get(apiUrl);
@@ -171,10 +170,10 @@ app.get('/dashboard', async (req, res) => {
         
 //         const qp = Object.keys(req.query).length == 0 ? Object.keys(data[0]) : Object.keys(req.query)       
 //         console.log('queryparams >>>>>', qp);        
-//         const apiUrl = 'https://zerofourtwo.net/api/dataset?' + qp;
+//         const apiUrl = 'http://localhost:3000/api/dataset?' + qp;
 //         //console.log('apiUrl >>>>>', apiUrl);
 
-//         //const response = await axios.get('https://zerofourtwo.net/api/dataset');
+//         //const response = await axios.get('http://localhost:3000/api/dataset');
 //          const allColumns = Object.keys(data[0]);
 //          const excludeColumns = ['_id', '_date', '_user'];
 
