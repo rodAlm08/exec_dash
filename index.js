@@ -1,6 +1,4 @@
-// require dotenv put the right path to the .env file
 require('dotenv').config({ path: './.env' });
-
 
 const express = require('express');
 const axios = require('axios');
@@ -14,8 +12,9 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); 
 app.use('/images', express.static('C:/Users/rodri/repos/exec_dash/images'));
-
 app.set('view engine', 'ejs');
+
+module.exports = app;
 
 function removeColumn(matrix, columnName) {
     matrix.forEach(row => {
@@ -54,9 +53,9 @@ app.get('/dashboard', async (req, res) => {
                 console.log('Queryparams', queryParams);
            
             // Fetch data from the external API
-            data = await axios.get("http://localhost:3000/api/dataset", {headers});
+            data = await axios.get("https://zerofourtwo.net/api/dataset", {headers});
 
-            // data = await axios.get("http://localhost:3000/api/dataset");
+            // data = await axios.get("https://zerofourtwo.net/api/dataset");
              
         } else if(req.query.submit === 'clean'){
             console.log('submit clean')
@@ -73,18 +72,18 @@ app.get('/dashboard', async (req, res) => {
                         }
                     }
                 ).join('&');
-            const apiUrl = `http://localhost:3000/api/dataset?${qp}`;
+            const apiUrl = `https://zerofourtwo.net/api/dataset?${qp}`;
             console.log('apiUrl', apiUrl);
 
             // Fetch data from the external API
             const response = await axios.get(apiUrl, {headers});
             data = response;
             console.log('data inside clean', data.data);
-            //data = await axios.get("http://localhost:3000/api/dataset" + queryParams);
+            //data = await axios.get("https://zerofourtwo.net/api/dataset" + queryParams);
         }
         else{
             console.log('submit not filter')
-            data = await axios.get("http://localhost:3000/api/dataset", {headers});
+            data = await axios.get("https://zerofourtwo.net/api/dataset", {headers});
             //console.log('Data LINE 40:', data.data);
         }
 
@@ -130,7 +129,7 @@ app.get('/dashboard', async (req, res) => {
 //     try {
 //         // Construct the API URL based on query parameters
 //         const queryParams = Object.keys(req.query).map(key => `${key}=${req.query[key]}`).join('&');
-//         const apiUrl = `http://localhost:3000/api/dataset?${queryParams}`;
+//         const apiUrl = `https://zerofourtwo.net/api/dataset?${queryParams}`;
         
 //         // Fetch data from the external API
 //         const response = await axios.get(apiUrl);
@@ -170,10 +169,10 @@ app.get('/dashboard', async (req, res) => {
         
 //         const qp = Object.keys(req.query).length == 0 ? Object.keys(data[0]) : Object.keys(req.query)       
 //         console.log('queryparams >>>>>', qp);        
-//         const apiUrl = 'http://localhost:3000/api/dataset?' + qp;
+//         const apiUrl = 'https://zerofourtwo.net/api/dataset?' + qp;
 //         //console.log('apiUrl >>>>>', apiUrl);
 
-//         //const response = await axios.get('http://localhost:3000/api/dataset');
+//         //const response = await axios.get('https://zerofourtwo.net/api/dataset');
 //          const allColumns = Object.keys(data[0]);
 //          const excludeColumns = ['_id', '_date', '_user'];
 
