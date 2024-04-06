@@ -47,6 +47,35 @@ import { removeColumn, constructQueryParamsString, determineSelectedColumns } fr
   });
 
   
+
+  const valuableColumns = [
+    "_id", "_date", "_user", "fm_avg_trk_time", "fm_accuracy", "vx_avg_res_time",
+    "vx_shot_accuracy", "vx_trg_accuracy", "au_avg_res_time", "bm_HR_max",
+    "bm_HR_avg", "bm_HR_var", "bm_act_steps", "bm_sleep",
+  ];
+  
+  const excludeColumns = ["_id", "_date", "_user"];
+  
+  describe("determineSelectedColumns function", () => {
+    it("returns all valuable columns when no columns are specified in reqQuery", () => {
+      const reqQuery = {};
+      const result = determineSelectedColumns(reqQuery, valuableColumns, excludeColumns);
+      expect(result).to.deep.equal([
+        "fm_avg_trk_time", "fm_accuracy", "vx_avg_res_time", "vx_shot_accuracy",
+        "vx_trg_accuracy", "au_avg_res_time", "bm_HR_max", "bm_HR_avg",
+        "bm_HR_var", "bm_act_steps", "bm_sleep",
+      ]);
+    });
+  
+    it("returns specified columns from reqQuery when they are provided", () => {
+      const reqQuery = { columns: ["fm_accuracy", "bm_HR_avg"] };
+      const result = determineSelectedColumns(reqQuery, valuableColumns, excludeColumns);
+      expect(result).to.deep.equal(["fm_accuracy", "bm_HR_avg"]);
+    });
+      
+  });
+
+  
 })();
 
 
