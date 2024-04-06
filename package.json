@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require esm"
+    "test": "mocha test/*.js"
   },
   "keywords": [],
   "author": "",
@@ -23,5 +23,9 @@
     "mocha": "^10.4.0",
     "sinon": "^17.0.1",
     "supertest": "^6.3.4"
+  },
+  "mocha": {
+    "extension": ["js", "mjs"],
+    "spec": "test/*.mjs"
   }
 }

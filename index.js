@@ -14,7 +14,7 @@ app.use(express.json());
 app.use('/images', express.static('C:/Users/rodri/repos/exec_dash/images'));
 app.set('view engine', 'ejs');
 
-//module.exports = app;
+
 
 exports.removeColumn = (matrix, columnName) => {
     matrix.forEach(row => {
@@ -28,21 +28,37 @@ async function fetchData(apiUrl, headers) {
     return response.data;
 }
 
+// function constructQueryParamsString(query) {
+//     return Object.keys(query)
+//         .map(key => {
+//             if (Array.isArray(query[key])) {
+//                 return query[key].map(k => `${key}=${k}`).join('&');
+//             } else {
+//                 return `${key}=${query[key]}`
+//             }
+//         })
+//         .join('&');
+// }
+
 function constructQueryParamsString(query) {
     return Object.keys(query)
         .map(key => {
             if (Array.isArray(query[key])) {
-                return query[key].map(k => `${key}=${k}`).join('&');
+                return query[key].map(k => `${encodeURIComponent(key)}=${encodeURIComponent(k)}`).join('&');
             } else {
-                return `${key}=${query[key]}`
+                return `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`;
             }
         })
         .join('&');
 }
 
+
+
+
 function determineSelectedColumns(reqQuery, allColumns, excludeColumns) {
-    return reqQuery.columns ? [].concat(reqQuery.columns) : allColumns.filter(column => !excludeColumns.includes(column));
+  return reqQuery.columns ? reqQuery.columns.filter(column => !excludeColumns.includes(column)) : allColumns.filter(column => !excludeColumns.includes(column));
 }
+
 
 async function handleRequest(req, res) {
     const valuableColumns = [
@@ -212,8 +228,12 @@ app.get('/dashboard', async (req, res) => {
 // });
 
 
+module.exports.constructQueryParamsString = constructQueryParamsString;
+module.exports.determineSelectedColumns = determineSelectedColumns;
+
 
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
+
