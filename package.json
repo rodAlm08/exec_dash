@@ -25,7 +25,10 @@
     "supertest": "^6.3.4"
   },
   "mocha": {
-    "extension": ["js", "mjs"],
+    "extension": [
+      "js",
+      "mjs"
+    ],
     "spec": "test/*.mjs"
   }
 }

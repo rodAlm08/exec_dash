@@ -14,8 +14,6 @@ app.use(express.json());
 app.use('/images', express.static('C:/Users/rodri/repos/exec_dash/images'));
 app.set('view engine', 'ejs');
 
-
-
 exports.removeColumn = (matrix, columnName) => {
     matrix.forEach(row => {
         delete row[columnName];
@@ -51,8 +49,6 @@ function constructQueryParamsString(query) {
         })
         .join('&');
 }
-
-
 
 
 function determineSelectedColumns(reqQuery, allColumns, excludeColumns) {
@@ -230,6 +226,7 @@ app.get('/dashboard', async (req, res) => {
 
 module.exports.constructQueryParamsString = constructQueryParamsString;
 module.exports.determineSelectedColumns = determineSelectedColumns;
+module.exports.fetchData = fetchData;
 
 
 
