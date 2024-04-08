@@ -84,13 +84,16 @@ async function handleRequest(req, res) {
         let data;
 
         if (req.query.submit === 'filter') {
-            data = await fetchData("https://zerofourtwo.net/api/dataset", headers);
+            //data = await fetchData("https://zerofourtwo.net/api/dataset", headers);
+            data = await fetchData("http://localhost:3000/api/dataset", headers);
         } else if (req.query.submit === 'clean') {
             const queryString = constructQueryParamsString(req.query);
-            const apiUrl = `https://zerofourtwo.net/api/dataset?${queryString}`;
+            //const apiUrl = `https://zerofourtwo.net/api/dataset?${queryString}`;
+            const apiUrl = `http://localhost:3000/api/dataset?${queryString}`;
             data = await fetchData(apiUrl, headers);
         } else {
-            data = await fetchData("https://zerofourtwo.net/api/dataset", headers);
+            //data = await fetchData("https://zerofourtwo.net/api/dataset", headers);
+            data = await fetchData("http://localhost:3000/api/dataset", headers);
         }
 
         let filteredData = data;
@@ -103,8 +106,12 @@ async function handleRequest(req, res) {
             }
         });
 
+        const totalCount = filteredData.length;
+        console.log('Total count:', totalCount);
+        
         res.render('./dataPage', {
             data: filteredData,
+            totalCount: totalCount,
             columns: selectedColumns,
             selectedColumns: selectedColumns,
             req: req
