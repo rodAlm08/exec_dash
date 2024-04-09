@@ -76,24 +76,34 @@ async function handleRequest(req, res) {
 
     const headers = { 'Authorization': `Bearer ${process.env.API_SECRET_KEY}` };
 
-    try {
+  //  try {
         const queryParams = Object.keys(req.query).length === 0 ? valuableColumns : Object.keys(req.query);
         const excludeColumns = ['_id', '_date', '_user'];
         const selectedColumns = determineSelectedColumns(req.query, valuableColumns, excludeColumns);
-
+        var totalCount = 0;
+        //console.log(req);
         let data;
-
+        //http://54.236.53.46:4000/
         if (req.query.submit === 'filter') {
-            //data = await fetchData("https://zerofourtwo.net/api/dataset", headers);
-            data = await fetchData("http://localhost:3000/api/dataset", headers);
+            data = await fetchData("http://54.236.53.46:4000/api/dataset", headers);
+            //data = await fetchData("http://localhost:3000/api/dataset", headers);
+            totalCount = data.length;
+            console.log('Total count filter:', totalCount);
+
         } else if (req.query.submit === 'clean') {
             const queryString = constructQueryParamsString(req.query);
-            //const apiUrl = `https://zerofourtwo.net/api/dataset?${queryString}`;
-            const apiUrl = `http://localhost:3000/api/dataset?${queryString}`;
+            const apiUrl = `http://54.236.53.46:4000/api/dataset?${queryString}`;
+            //const apiUrl = `http://localhost:3000/api/dataset?${queryString}`;
             data = await fetchData(apiUrl, headers);
+            totalCount = data.length;
+            console.log('Query String:', queryString);
+            console.log('Total count clean:', totalCount);
+
         } else {
-            //data = await fetchData("https://zerofourtwo.net/api/dataset", headers);
-            data = await fetchData("http://localhost:3000/api/dataset", headers);
+            data = await fetchData("http://54.236.53.46:4000/api/dataset", headers);
+            //data = await fetchData("http://localhost:3000/api/dataset", headers);
+            totalCount = data.length;
+            console.log('Total count none:', totalCount);
         }
 
         let filteredData = data;
@@ -106,7 +116,7 @@ async function handleRequest(req, res) {
             }
         });
 
-        const totalCount = filteredData.length;
+        totalCount = filteredData.length;
         console.log('Total count:', totalCount);
         
         res.render('./dataPage', {
@@ -117,14 +127,15 @@ async function handleRequest(req, res) {
             req: req
         });
 
-    } catch (error) {
-        res.status(500).send('Failed to fetch data');
-    }
+ //   } catch (error) {
+   //     res.status(500).send('Failed to fetch data');
+    //}
 }
 
 
 app.get('/dashboard', async (req, res) => {
     await handleRequest(req, res);
+    //console.log('Dashboard', req.query);
 });
 
 
