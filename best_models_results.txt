@@ -1,0 +1,6 @@
+y_fm_time: ('rf', {'clf__max_depth': 20, 'clf__n_estimators': 50})
+y_fm_acc: ('rf', {'clf__max_depth': 10, 'clf__n_estimators': 50})
+y_vx_time: ('knn', {'clf__n_neighbors': 7, 'clf__weights': 'uniform'})
+y_vx_shot_acc: ('knn', {'clf__n_neighbors': 7, 'clf__weights': 'uniform'})
+y_vx_trg_acc: ('rf', {'clf__max_depth': 20, 'clf__n_estimators': 50})
+y_au_time: ('rf', {'clf__max_depth': None, 'clf__n_estimators': 100})
