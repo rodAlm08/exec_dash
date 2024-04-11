@@ -36,7 +36,7 @@
                                     <% }) %>
                             </div>
                         </div>
-                        
+
                     </div>
                     <button type="submit" name="submit" value="filter" class="btn btn-success" id="sendToAI">Show
                         Selected Columns</button>
@@ -86,7 +86,7 @@
                     </li>
                     <% }) %>
             </ul>
-        </nav>  
+        </nav>
 
 
         <div class="row">
@@ -95,34 +95,66 @@
                 </p>
             </div>
         </div>
-
-        <div class="row mt-4">
-            <button id="nextImageButton" class="btn btn-primary">Next Image</button>
         
-            <div class="col-md-12">
-                <img id="imageDisplay" src="" alt="Plot" class="img-fluid">
-                <br>
-            </div>
-        </div>
 
+        <button id="analyzeButton" onclick="analyze()" class="btn btn-primary">Analyze Data</button>
+
+        <div id="box"></div>
     </div>
 
     <script>
+
+
+        function analyze() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        let imageData = JSON.parse(this.responseText);
+                        let keys = Object.keys(imageData);
+                        let values = Object.values(imageData);
+                        for (let i = 0; i < values.length; i++) {
+                            loadImage(values[i]);
+                        }
+                    } else {
+                        console.log('Failed to load image data');
+                    }
+                }
+            };
+            xhttp.open("GET", "http://52.204.70.204:4000/api/ai");
+            xhttp.send();
+        }
+
+        function loadImage(imageUrl) {
+            var img = new Image();
+            img.onload = function () {
+                //document.querySelector(".col-md-12").appendChild(img);
+                document.getElementById("box").appendChild(img);
+            };
+            img.onerror = function () {
+                console.log('Failed to load image:', imageUrl);
+            };
+            img.src = "http://52.204.70.204:4000/api/images" + imageUrl;
+            console.log(img.src);
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const selectAllBtn = document.querySelector('.select-all-btn');
             const deselectAllBtn = document.querySelector('.deselect-all-btn');
             const resetColumnsBtn = document.querySelector('.reset-columns-btn');
             const checkboxes = document.querySelectorAll('.column-checkbox');
             const rowsSelect = document.getElementById('rowsSelect');
-            const dataRows = document.querySelectorAll('tr.data-row'); // Assuming each data row has 'data-row' class
+            const dataRows = document.querySelectorAll('tr.data-row');
             const imageDisplay = document.getElementById('imageDisplay');
             const nextImageButton = document.getElementById('nextImageButton');
-          
-            if (nextImageButton) {
-                nextImageButton.addEventListener('click', loadNextImage);
-            } else {
-                console.error('Element with ID "nextImageButton" not found.');
-            }
+            const loadDoc = document.getElementById('analyzeButton');
+
+
+            // if (nextImageButton) {
+            //     nextImageButton.addEventListener('click', loadNextImage);
+            // } else {
+            //     console.error('Element with ID "nextImageButton" not found.');
+            // }
 
             // Function to update the visibility of data rows based on the selected number of rows
             const updateVisibleRows = () => {
@@ -147,25 +179,29 @@
                 window.location.href = '/dashboard'; // Redirect without any query parameters
             });
 
-            let imageFiles = [];
-            // Function to load the next image
-            function loadNextImage() {     
-                fetch('http://localhost:5000')
-                    .then(response => response.text())
-                    .then(html => {
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(html, 'text/html');
-                        const imgSrc = doc.querySelector('img').src;
-                        imageDisplay.src = imgSrc;
-                    })
-                    .catch(error => {
-                        console.error('Error loading image:', error);
-                    });
-            }
-            // Initial load of the first image
-            loadNextImage();
 
-            nextImageButton.addEventListener('click', loadNextImage);
+
+            // // Function to load the next image
+            // function loadNextImage() {     
+            //     fetch('http://localhost:4200/images')
+            //         .then(response => response.text())
+            //         .then(html => {
+            //             const parser = new DOMParser();
+            //             const doc = parser.parseFromString(html, 'text/html');
+            //             const imgSrc = doc.querySelector('img').src;
+            //             imageDisplay.src = imgSrc;
+            //         })
+            //         .catch(error => {
+            //             console.error('Error loading image:', error);
+            //         });
+            // }
+
+            // Initial load of the first image
+            //loadNextImage();
+
+
+
+            // nextImageButton.addEventListener('click', loadNextImage);
 
             // Event listener for any change in the checkboxes
             checkboxes.forEach(checkbox => {
@@ -178,16 +214,16 @@
             // Adjust visibility of data rows when the selection changes
             rowsSelect.addEventListener('change', updateVisibleRows);
             // Event listener for image click to load the next image
-            imageDisplay.addEventListener('click', loadNextImage);
+            //imageDisplay.addEventListener('click', loadNextImage);
             // Event listener for next image button click
-            nextImageButton.addEventListener('click', loadNextImage);
+            //nextImageButton.addEventListener('click', loadNextImage);
 
             // Initial adjustment of data rows visibility based on the default selection
             updateVisibleRows();
 
         });
 
-       
+
 
     </script>
 

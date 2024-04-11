@@ -6,12 +6,16 @@ const cors = require("cors");
 const app = express();
 const port = 4200;
 
+const { exec, execSync } = require('child_process');
+const http = require('http');
+
 app.use(cors());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/images", express.static("C:/Users/rodri/repos/exec_dash/images"));
 app.set("view engine", "ejs");
+app.use(express.static(__dirname + '/images'));
 
 exports.removeColumn = (matrix, columnName) => {
   matrix.forEach((row) => {
@@ -45,6 +49,7 @@ function determineSelectedColumns(reqQuery, allColumns, excludeColumns) {
     : allColumns.filter((column) => !excludeColumns.includes(column));
 }
 
+
 async function handleRequest(req, res) {
   const valuableColumns = [
     "_id",
@@ -63,7 +68,7 @@ async function handleRequest(req, res) {
     "bm_sleep",
   ];
 
-  const baseEndpoint = "http://54.236.53.46:4000/api/dataset";
+  const baseEndpoint = "http://52.204.70.204:4000/api/dataset";
   const headers = { Authorization: `Bearer ${process.env.API_SECRET_KEY}` };
 
   const currentPage = parseInt(req.query.page, 10) || 1;
@@ -89,9 +94,9 @@ async function handleRequest(req, res) {
   var totalCount = 0;
 
    try {
-  //http://54.236.53.46:4000/
+  //http://52.204.70.204:4000/
   if (req.query.submit === "filter") {
-    data = await fetchData("http://54.236.53.46:4000/api/dataset", headers);
+    data = await fetchData("http://52.204.70.204:4000/api/dataset", headers);
     //data = await fetchData("http://localhost:3000/api/dataset", headers);
     totalCount = data.length;
   } else if (req.query.submit === "clean") {
@@ -104,9 +109,10 @@ async function handleRequest(req, res) {
     totalCount = data.length;
     //console.log('apiUrl:', apiUrl);
   } else {
-    data = await fetchData("http://54.236.53.46:4000/api/dataset", headers);
+    data = await fetchData("http://52.204.70.204:4000/api/dataset", headers);
     //data = await fetchData("http://localhost:3000/api/dataset", headers);
     totalCount = data.length;
+    
   }
 
   let filteredData = data.slice(startIndex, endIndex);
@@ -164,13 +170,33 @@ function generatePaginationLinks(currentPage, totalPages, originalQuery) {
     return paginationLinks;
   }
 
+
+
+
+
+// app.get("/python", async (req, res) => {
+//   await execSync(`C:/Users/rodri/AppData/Local/Programs/Python/Python311/python.exe ${process.env.AI_ADDRESS}`, (err, stdout, stderr) => {
+//     if (err) {
+//       console.error(err);
+//       return;
+//     }
+//     console.log(stdout);
+//   });
+//   //res.send("Python script executed");
+//   res.sendFile('C:/Users/rodri/repos/exec_dash/images/y_au_time.png');
+// });
+
 app.get("/dashboard", async (req, res) => {
+  console.log('ai address:', process.env.AI_ADDRESS);
   await handleRequest(req, res);
+  
 });
 
 module.exports.constructQueryParamsString = constructQueryParamsString;
 module.exports.determineSelectedColumns = determineSelectedColumns;
 module.exports.fetchData = fetchData;
+
+
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
