@@ -174,17 +174,20 @@ function generatePaginationLinks(currentPage, totalPages, originalQuery) {
 
 
 
-// app.get("/python", async (req, res) => {
-//   await execSync(`C:/Users/rodri/AppData/Local/Programs/Python/Python311/python.exe ${process.env.AI_ADDRESS}`, (err, stdout, stderr) => {
-//     if (err) {
-//       console.error(err);
-//       return;
-//     }
-//     console.log(stdout);
-//   });
-//   //res.send("Python script executed");
-//   res.sendFile('C:/Users/rodri/repos/exec_dash/images/y_au_time.png');
-// });
+app.get("/python", async (req, res) => {
+  let hash = Math.random().toString(16).substring(7);
+
+  let result = execSync(`C:/Users/rodri/AppData/Local/Programs/Python/Python311/python.exe ${process.env.AI_ADDRESS} ${hash}`, (err, stdout, stderr) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(stdout);
+  });
+  json = JSON.parse(result);
+  res.json(json);
+  //res.sendFile('C:/Users/rodri/repos/exec_dash/images/y_au_time.png');
+});
 
 app.get("/dashboard", async (req, res) => {
   console.log('ai address:', process.env.AI_ADDRESS);
