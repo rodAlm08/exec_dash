@@ -10,8 +10,6 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
-from flask import Flask, send_from_directory
-from flask_cors import CORS
 from dotenv import load_dotenv
 import requests
 import json
