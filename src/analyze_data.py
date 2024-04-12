@@ -110,8 +110,7 @@ def main(hash):
     plt.tight_layout()
     plt.subplots_adjust(top=0.9)
     plt.suptitle('Model Performance Comparison Across Variables - Smaller the MSE value, better performance.', size=16)
-    
-    performance_plot_path = os.path.join(output_dir, "model_performance_comparison.png")
+    performance_plot_path = tempfile.gettempdir() + "/" + hash + "/model_performance_comparison.png";
     plt.savefig(performance_plot_path)
     plt.close()
     plot_paths['performance_comparison'] = performance_plot_path
@@ -127,7 +126,7 @@ def main(hash):
         plt.xlabel('Index')
         plt.ylabel('Value')
         plt.legend()
-        actual_vs_predicted_path = os.path.join(output_dir, f"{name}_actual_vs_predicted.png")
+        actual_vs_predicted_path = tempfile.gettempdir() + "/" + hash + f"/{name}_actual_vs_predicted.png";
         plt.savefig(actual_vs_predicted_path)
         plt.close()
         plot_paths[name] = actual_vs_predicted_path
