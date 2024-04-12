@@ -113,6 +113,8 @@ def main(hash):
     performance_plot_path = tempfile.gettempdir() + "/" + hash + "/model_performance_comparison.png";
     plt.savefig(performance_plot_path)
     plt.close()
+    #when saving the path i want to remove the /tmp/ from the path
+    performance_plot_path = performance_plot_path.replace("/tmp/", "")
     plot_paths['performance_comparison'] = performance_plot_path
 
     # Plot and save actual vs predicted for the best models
@@ -130,9 +132,7 @@ def main(hash):
         plt.savefig(actual_vs_predicted_path)
         plt.close()
         #when saving the path i want to remove the /tmp/ from the path
-        actual_vs_predicted_path = actual_vs_predicted_path.replace("/tmp/", "")
-        
-        
+        actual_vs_predicted_path = actual_vs_predicted_path.replace("/tmp/", "")       
         plot_paths[name] = actual_vs_predicted_path
 
     return json.dumps(plot_paths)
