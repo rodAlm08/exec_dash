@@ -67,14 +67,24 @@ def main(hash):
         'Random Forest': {'clf__n_estimators': [50, 100, 200], 'clf__max_depth': [None, 10, 20]},
         'KNN': {'clf__n_neighbors': [3, 5, 7], 'clf__weights': ['uniform', 'distance']}
     }
-
-
-    best_models = {}
+    
     results = []
+    best_models = {}
+    plot_paths = {}
 
-    for name, (X_train, X_test, y_train, y_test) in splits.items():
-        min_mse = float('inf')
+    output_dir = os.path.join(hash)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    # Prepare a plot with subplots for model performance comparison
+    fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(18, 12))
+    axes = axes.flatten()  # Flatten to easily index them
+
+    for i, (name, (X_train, X_test, y_train, y_test)) in enumerate(splits.items()):
+        model_performance = []
+        min_mse = float('inf') 
         best_model_info = None
+
         for model_name, pipe in models.items():
             grid_search = GridSearchCV(pipe, param_grids[model_name], cv=5, scoring='neg_mean_squared_error')
             grid_search.fit(X_train, y_train.ravel())
@@ -82,32 +92,44 @@ def main(hash):
             y_pred = best_model.predict(X_test)
             mse = mean_squared_error(y_test.ravel(), y_pred)
             results.append({'Variable': name, 'Model': model_name, 'MSE': mse})
+            model_performance.append((model_name, mse))
+            
             if mse < min_mse:
                 min_mse = mse
-                best_model_info = best_model
+                best_model_info = (best_model, model_name, mse)
+        
         best_models[name] = best_model_info
 
-    # Ensure directory exists
-    output_dir = os.path.join(tempfile.gettempdir(), hash)
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+        # Plot model performance on the corresponding subplot
+        performance_df = pd.DataFrame(model_performance, columns=['Model', 'MSE'])
+        performance_df.set_index('Model').plot(kind='bar', ax=axes[i], title=name)
+        axes[i].set_ylabel('MSE')
+        axes[i].set_ylim([0, max(performance_df['MSE']) + 1])  # Adjust Y-limits for better comparison
 
-    # Plotting actual vs predicted for the best models using line plots and saving them
-    plot_paths = {}
-    for name, model in best_models.items():
+    # Adjust layout and save the model performance plot
+    plt.tight_layout()
+    plt.subplots_adjust(top=0.9)
+    plt.suptitle('Model Performance Comparison Across Variables - Smaller the MSE value, better performance.', size=16)
+    performance_plot_path = os.path.join(output_dir, "model_performance_comparison.png")
+    plt.savefig(performance_plot_path)
+    plt.close()
+    plot_paths['performance_comparison'] = performance_plot_path
+
+    # Plot and save actual vs predicted for the best models
+    for name, (best_model, model_name, _) in best_models.items():
         _, X_test, _, y_test = splits[name]
-        y_pred = model.predict(X_test)
+        y_pred = best_model.predict(X_test)
         plt.figure()
         plt.plot(range(len(y_test)), y_test.ravel(), label='Actual', linestyle='-', marker='o', color='blue')
-        plt.plot(range(len(y_pred)), y_pred, label='Predicted', linestyle='--', marker='x', color='red')
-        plt.title(f'{name} - Actual vs Predicted')
+        plt.plot(range(len(y_pred)), y_pred, label=f'Predicted - {model_name}', linestyle='--', marker='x', color='red')
+        plt.title(f'{name} - Actual vs Predicted using {model_name}')
         plt.xlabel('Index')
         plt.ylabel('Value')
         plt.legend()
-        plot_path = os.path.join(output_dir, f"{name}.png")
-        plt.savefig(plot_path)
+        actual_vs_predicted_path = os.path.join(output_dir, f"{name}_actual_vs_predicted.png")
+        plt.savefig(actual_vs_predicted_path)
         plt.close()
-        plot_paths[name] = plot_path
+        plot_paths[name] = actual_vs_predicted_path
 
     return json.dumps(plot_paths)
 
