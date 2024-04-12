@@ -25,7 +25,7 @@ def main(hash):
     headers = {
     'Authorization': 'Bearer ' + os.getenv("API_SECRET_KEY")
     }
-    df = pd.read_json(r'http://54.159.1.15:4000/api/dataset', storage_options=headers)
+    df = pd.read_json(r'http://54.236.30.169:4000/api/dataset', storage_options=headers)
 
     unNeededColumns = ['_id', '_date', '_user', 'bm_HR_max', 'bm_act_steps']
     df.drop(unNeededColumns, axis=1, inplace=True)
@@ -129,6 +129,10 @@ def main(hash):
         actual_vs_predicted_path = tempfile.gettempdir() + "/" + hash + f"/{name}_actual_vs_predicted.png";
         plt.savefig(actual_vs_predicted_path)
         plt.close()
+        #when saving the path i want to remove the /tmp/ from the path
+        actual_vs_predicted_path = actual_vs_predicted_path.replace("/tmp/", "")
+        
+        
         plot_paths[name] = actual_vs_predicted_path
 
     return json.dumps(plot_paths)

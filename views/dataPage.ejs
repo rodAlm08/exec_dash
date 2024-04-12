@@ -122,7 +122,7 @@
                     }
                 }
             };
-            xhttp.open("GET", "http://54.159.1.15:4000/api/ai/" + analysisType);
+            xhttp.open("GET", "http://54.236.30.169:4000/api/ai/" + analysisType);
             xhttp.send();
         }
 
@@ -134,10 +134,11 @@
                     console.log(transactionData);
                     let keys = Object.keys(transactionData);
                     let values = Object.values(transactionData);
-                    for (let i = 0; i < values.length; i++) {
-                        loadImage(values[i], hash);
-                    }
+                    
                     if(keys && keys.length > 0){
+                        for (let i = 0; i < values.length; i++) {
+                            loadImage(values[i], hash);
+                        }
                     } else {
                         // wait for 4 seconds and call the function again
                         setTimeout(function(){
@@ -149,7 +150,7 @@
                     console.log('Failed to load transaction data');
                 }
             };
-            ajax.open("GET", "http://54.159.1.15:4000/api/transaction/" + hash);
+            ajax.open("GET", "http://54.236.30.169:4000/api/transaction/" + hash);
             ajax.send();
         }
 
@@ -158,11 +159,12 @@
             img.onload = function () {
                 //document.querySelector(".col-md-12").appendChild(img);
                 document.getElementById("box").appendChild(img);
+               // document.getElementById("box").innerHTML += <img 
             };
             img.onerror = function () {
                 console.log('Failed to load image:', imageUrl);
             };
-            img.src = "http://54.159.1.15:4000/api/images/" + hash + "/" + imageUrl;
+            img.src = "http://54.236.30.169:4000/api/images/" + hash + "/" + imageUrl;
             console.log(img.src);
         }
 

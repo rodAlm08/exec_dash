@@ -68,7 +68,7 @@ async function handleRequest(req, res) {
     "bm_sleep",
   ];
 
-  const baseEndpoint = "http://54.159.1.15:4000/api/dataset";
+  const baseEndpoint = "http://54.236.30.169:4000/api/dataset";
   const headers = { Authorization: `Bearer ${process.env.API_SECRET_KEY}` };
 
   const currentPage = parseInt(req.query.page, 10) || 1;
@@ -94,9 +94,9 @@ async function handleRequest(req, res) {
   var totalCount = 0;
 
    try {
-  //http://54.159.1.15:4000/
+  //http://54.236.30.169:4000/
   if (req.query.submit === "filter") {
-    data = await fetchData("http://54.159.1.15:4000/api/dataset", headers);
+    data = await fetchData("http://54.236.30.169:4000/api/dataset", headers);
     //data = await fetchData("http://localhost:3000/api/dataset", headers);
     totalCount = data.length;
   } else if (req.query.submit === "clean") {
@@ -109,7 +109,7 @@ async function handleRequest(req, res) {
     totalCount = data.length;
     //console.log('apiUrl:', apiUrl);
   } else {
-    data = await fetchData("http://54.159.1.15:4000/api/dataset", headers);
+    data = await fetchData("http://54.236.30.169:4000/api/dataset", headers);
     //data = await fetchData("http://localhost:3000/api/dataset", headers);
     totalCount = data.length;
     
