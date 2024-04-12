@@ -110,6 +110,7 @@ def main(hash):
     plt.tight_layout()
     plt.subplots_adjust(top=0.9)
     plt.suptitle('Model Performance Comparison Across Variables - Smaller the MSE value, better performance.', size=16)
+    
     performance_plot_path = os.path.join(output_dir, "model_performance_comparison.png")
     plt.savefig(performance_plot_path)
     plt.close()

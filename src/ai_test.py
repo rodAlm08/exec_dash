@@ -10,7 +10,7 @@ import tempfile
 hash = sys.argv[1] 
 
 def main(hash):
-    
+
     # plot a simple chart to test use savefig to save the chart
     plt.plot([1, 2, 3, 4])
     plt.ylabel('some numbers')
@@ -20,4 +20,4 @@ def main(hash):
     return json.dumps({'test': "simple_chart.png"})
 
 if __name__ == '__main__':
-    main(sys.argv[1])
+   print(main(hash))
