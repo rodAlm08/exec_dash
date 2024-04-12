@@ -100,7 +100,9 @@
         <button id="analyzeButton" onclick="analyze('regression')" class="btn btn-primary">Regression Analysis</button>
         <button id="analyzeButton" onclick="analyze('neurons')" class="btn btn-primary">Neural Network Analysis</button>
 
-        <div id="box"></div>
+        <div id="box1" class="bg-warning"></div>
+        
+        <div id="box2" class="bg-success"></div>
     </div>
 
     <script>
@@ -115,7 +117,7 @@
                         let hash = imageData.session;
                         console.log(imageData);
 
-                        ajaxCall(hash);
+                        ajaxCall(hash, analysisType);
                         
                     } else {
                         console.log('Failed to load image data');
@@ -126,7 +128,7 @@
             xhttp.send();
         }
 
-        function ajaxCall(hash){
+        function ajaxCall(hash, name){
             let ajax = new XMLHttpRequest();
             ajax.onreadystatechange = function () {
                 if (ajax.readyState == 4 && ajax.status == 200) {
@@ -137,7 +139,7 @@
                     
                     if(keys && keys.length > 0){
                         for (let i = 0; i < values.length; i++) {
-                            loadImage(values[i], hash);
+                            loadImage(values[i], hash, name);
                         }
                     } else {
                         // wait for 4 seconds and call the function again
@@ -154,12 +156,12 @@
             ajax.send();
         }
 
-        function loadImage(imageUrl, hash) {
+        function loadImage(imageUrl, hash, name) {
             var img = new Image();
             console.log(img);
             img.onload = function () {
                 //document.querySelector(".col-md-12").appendChild(img);
-                document.getElementById("box").appendChild(img);
+                document.getElementById(name === "regressor" ? "box1" : "box2").appendChild(img);
                // document.getElementById("box").innerHTML += <img 
             };
             img.onerror = function () {

@@ -173,7 +173,7 @@ function generatePaginationLinks(currentPage, totalPages, originalQuery) {
 
 //excesync????
 app.get("/python", async (req, res) => {
-  let hash = Math.random().toString(16).substring(7);
+  let hash = "awf233dss"
 
   let result = execSync(`C:/Users/rodri/AppData/Local/Programs/Python/Python311/python.exe ${process.env.AI_ADDRESS} ${hash}`, (err, stdout, stderr) => {
  // let result = execSync(`python3 ${process.env.AI_ADDRESS} ${hash}`, (err, stdout, stderr) => {
