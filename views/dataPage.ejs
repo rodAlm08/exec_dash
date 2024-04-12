@@ -96,8 +96,9 @@
             </div>
         </div>
         
-
-        <button id="analyzeButton" onclick="analyze()" class="btn btn-primary">Analyze Data</button>
+        <button id="analyzeButton" onclick="analyze('test')" class="btn btn-primary">Test</button>
+        <button id="analyzeButton" onclick="analyze('regression')" class="btn btn-primary">Regression Analysis</button>
+        <button id="analyzeButton" onclick="analyze('neurons')" class="btn btn-primary">Neural Network Analysis</button>
 
         <div id="box"></div>
     </div>
@@ -105,7 +106,7 @@
     <script>
 
 
-        function analyze() {
+        function analyze(analysisType) {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4) {
@@ -114,34 +115,45 @@
                         let hash = imageData.session;
                         console.log(imageData);
 
-                        let ajax = new XMLHttpRequest();
-                        ajax.open("GET", "http://54.159.1.15:4000/api/transaction/" + hash, true);
-                        ajax.onreadystatechange = function () {
-                            if (ajax.readyState == 4) {
-                                if (ajax.status == 200) {
-                                    let transactionData = JSON.parse(ajax.responseText);
-                                    console.log(transactionData);
-                                } else {
-                                    console.log('Failed to load transaction data');
-                                }
-                            }
-                        };
-
-                        let keys = Object.keys(imageData);
-                        let values = Object.values(imageData);
-                        for (let i = 0; i < values.length; i++) {
-                            loadImage(values[i]);
-                        }
+                        ajaxCall(hash);
+                        
                     } else {
                         console.log('Failed to load image data');
                     }
                 }
             };
-            xhttp.open("GET", "http://54.159.1.15:4000/api/ai");
+            xhttp.open("GET", "http://54.159.1.15:4000/api/ai/" + analysisType);
             xhttp.send();
         }
 
-        function loadImage(imageUrl) {
+        function ajaxCall(hash){
+            let ajax = new XMLHttpRequest();
+            ajax.onreadystatechange = function () {
+                if (ajax.readyState == 4 && ajax.status == 200) {
+                    let transactionData = JSON.parse(ajax.responseText);
+                    console.log(transactionData);
+                    let keys = Object.keys(transactionData);
+                    let values = Object.values(transactionData);
+                    for (let i = 0; i < values.length; i++) {
+                        loadImage(values[i], hash);
+                    }
+                    if(keys && keys.length > 0){
+                    } else {
+                        // wait for 4 seconds and call the function again
+                        setTimeout(function(){
+                            console.log('Waiting for 4 seconds')
+                            ajaxCall(hash);
+                        }, 4000);
+                    }
+                } else {
+                    console.log('Failed to load transaction data');
+                }
+            };
+            ajax.open("GET", "http://54.159.1.15:4000/api/transaction/" + hash);
+            ajax.send();
+        }
+
+        function loadImage(imageUrl, hash) {
             var img = new Image();
             img.onload = function () {
                 //document.querySelector(".col-md-12").appendChild(img);
@@ -150,7 +162,7 @@
             img.onerror = function () {
                 console.log('Failed to load image:', imageUrl);
             };
-            img.src = "http://54.159.1.15:4000/api/images" + imageUrl;
+            img.src = "http://54.159.1.15:4000/api/images/" + hash + "/" + imageUrl;
             console.log(img.src);
         }
 
