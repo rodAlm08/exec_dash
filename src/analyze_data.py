@@ -25,7 +25,7 @@ def main(hash):
     headers = {
     'Authorization': 'Bearer ' + os.getenv("API_SECRET_KEY")
     }
-    df = pd.read_json(r'http://52.204.70.204:4000/api/dataset', storage_options=headers)
+    df = pd.read_json(r'http://54.159.1.15:4000/api/dataset', storage_options=headers)
 
     unNeededColumns = ['_id', '_date', '_user', 'bm_HR_max', 'bm_act_steps']
     df.drop(unNeededColumns, axis=1, inplace=True)
@@ -36,12 +36,12 @@ def main(hash):
 
     # Define targets
     targets = {
-        'FM_Time': dfClean.iloc[:, 0],
-        'FM_Acc.': dfClean.iloc[:, 1],
-        'Visual_Time': dfClean.iloc[:, 2],
-        'Visual_Acc.': dfClean.iloc[:, 3],
-        'Visual_trg Acc.': dfClean.iloc[:, 4],
-        'Audio_Time': dfClean.iloc[:, 5]
+        'fm_time': dfClean.iloc[:, 0],
+        'fm_acc': dfClean.iloc[:, 1],
+        'visual_time': dfClean.iloc[:, 2],
+        'visual_acc': dfClean.iloc[:, 3],
+        'visual_trg_acc': dfClean.iloc[:, 4],
+        'audio_time': dfClean.iloc[:, 5]
     }
 
   

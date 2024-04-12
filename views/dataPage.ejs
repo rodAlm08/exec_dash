@@ -111,6 +111,22 @@
                 if (this.readyState == 4) {
                     if (this.status == 200) {
                         let imageData = JSON.parse(this.responseText);
+                        let hash = imageData.session;
+                        console.log(imageData);
+
+                        let ajax = new XMLHttpRequest();
+                        ajax.open("GET", "http://54.159.1.15:4000/api/transaction/" + hash, true);
+                        ajax.onreadystatechange = function () {
+                            if (ajax.readyState == 4) {
+                                if (ajax.status == 200) {
+                                    let transactionData = JSON.parse(ajax.responseText);
+                                    console.log(transactionData);
+                                } else {
+                                    console.log('Failed to load transaction data');
+                                }
+                            }
+                        };
+
                         let keys = Object.keys(imageData);
                         let values = Object.values(imageData);
                         for (let i = 0; i < values.length; i++) {
@@ -121,7 +137,7 @@
                     }
                 }
             };
-            xhttp.open("GET", "http://52.204.70.204:4000/api/ai");
+            xhttp.open("GET", "http://54.159.1.15:4000/api/ai");
             xhttp.send();
         }
 
@@ -134,7 +150,7 @@
             img.onerror = function () {
                 console.log('Failed to load image:', imageUrl);
             };
-            img.src = "http://52.204.70.204:4000/api/images" + imageUrl;
+            img.src = "http://54.159.1.15:4000/api/images" + imageUrl;
             console.log(img.src);
         }
 
