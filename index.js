@@ -171,9 +171,7 @@ function generatePaginationLinks(currentPage, totalPages, originalQuery) {
   }
 
 
-
-
-
+//excesync????
 app.get("/python", async (req, res) => {
   let hash = Math.random().toString(16).substring(7);
 

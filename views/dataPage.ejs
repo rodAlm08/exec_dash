@@ -142,9 +142,9 @@
                     } else {
                         // wait for 4 seconds and call the function again
                         setTimeout(function(){
-                            console.log('Waiting for 4 seconds')
+                            console.log('Waiting for 12 seconds')
                             ajaxCall(hash);
-                        }, 4000);
+                        }, 12000);
                     }
                 } else {
                     console.log('Failed to load transaction data');
@@ -156,6 +156,7 @@
 
         function loadImage(imageUrl, hash) {
             var img = new Image();
+            console.log(img);
             img.onload = function () {
                 //document.querySelector(".col-md-12").appendChild(img);
                 document.getElementById("box").appendChild(img);
