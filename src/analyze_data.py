@@ -72,9 +72,9 @@ def main(hash):
     best_models = {}
     plot_paths = {}
 
-    output_dir = os.path.join(hash)
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    # output_dir = os.path.join(hash)
+    # if not os.path.exists(output_dir):
+    #     os.makedirs(output_dir)
 
     # Prepare a plot with subplots for model performance comparison
     fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(18, 12))
