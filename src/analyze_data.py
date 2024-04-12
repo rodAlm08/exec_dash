@@ -36,12 +36,12 @@ def main(hash):
 
     # Define targets
     targets = {
-        'FM Time': dfClean.iloc[:, 0],
-        'FM Acc.': dfClean.iloc[:, 1],
-        'Visual Time': dfClean.iloc[:, 2],
-        'Visual Acc.': dfClean.iloc[:, 3],
-        'Visual trg Acc.': dfClean.iloc[:, 4],
-        'Audio Time': dfClean.iloc[:, 5]
+        'FM_Time': dfClean.iloc[:, 0],
+        'FM_Acc.': dfClean.iloc[:, 1],
+        'Visual_Time': dfClean.iloc[:, 2],
+        'Visual_Acc.': dfClean.iloc[:, 3],
+        'Visual_trg Acc.': dfClean.iloc[:, 4],
+        'Audio_Time': dfClean.iloc[:, 5]
     }
 
   
