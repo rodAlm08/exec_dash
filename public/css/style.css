@@ -61,3 +61,17 @@ input[type="checkbox"] {
     transform: scale(1.2);
 }
 
+#box1 img, #box2 img {
+    width: 100%;            /* Ensure it doesn't exceed the width of the box */
+    height: auto;           /* Maintain aspect ratio */
+    object-fit: contain;      
+    max-height: 2000px;      /* Optional: Set a max-height for larger displays */
+    padding: 5px;
+}
+
+#box1, #box2 {
+    overflow-y: auto; /* Allows vertical scrolling */
+    padding: 5px;    /* Padding inside the box */
+    width: 100%;
+}
+

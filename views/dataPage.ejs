@@ -106,6 +106,9 @@
                     </div>
                 </div>
                 <div class="col-md-6 mb-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                     <button id="neuralButton" onclick="analyze('neurons')" class="btn btn-primary mb-2">Neural Network Analysis</button>
                     <div id="box2" class="p-3 border" style="background-color: #d4edda;">
                         
@@ -138,7 +141,7 @@
                         console.log(imageData);
 
                         ajaxCall(hash, analysisType);
-                        console.log('analysisType***************************:', analysisType);
+                        //console.log('analysisType***************************:', analysisType);
                         
                     } else {
                         console.log('Failed to load image data');
@@ -150,7 +153,7 @@
         }
 
         function ajaxCall(hash, name){
-            console.log('name --------------------------------------------', name);
+            //console.log('name --------------------------------------------', name);
             let ajax = new XMLHttpRequest();
             ajax.onreadystatechange = function () {
                 if (ajax.readyState == 4 && ajax.status == 200) {
@@ -167,9 +170,9 @@
                     } else {
                         // wait for 12 seconds and call the function again
                         setTimeout(function(){
-                            console.log('Waiting for 12 seconds')
+                            console.log('Waiting for 10 seconds')
                             ajaxCall(hash, name);
-                        }, 12000);
+                        }, 10000);
                     }
                 } else {
                     console.log('Failed to load transaction data');
@@ -181,11 +184,15 @@
 
         function loadImage(imageUrl, hash, name) {
             var img = new Image();
+            img.className = "img-fluid";
             console.log(img);
             img.onload = function () {
                 //document.querySelector(".col-md-12").appendChild(img);
-                document.getElementById(name === "regressor" ? "box1" : "box2").appendChild(img);
-                console.log('name:*************************************', name);
+                var boxId = name === 'regression' ? 'box1' : 'box2';
+                //document.getElementById(boxId).innerHTML = '';  // Clear previous contents
+                document.getElementById(boxId).appendChild(img);
+                //document.getElementById(name === "regressor" ? "box1" : "box2").appendChild(img);
+                //console.log('name:*************************************', name);
                // document.getElementById("box").innerHTML += <img 
             };
             img.onerror = function () {
