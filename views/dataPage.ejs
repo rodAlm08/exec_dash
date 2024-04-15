@@ -7,6 +7,7 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -95,15 +96,34 @@
                 </p>
             </div>
         </div>
+
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <button id="regressionButton" onclick="analyze('regression')" class="btn btn-primary mb-2">Regression Analysis</button>
+                    <div id="box1" class="p-3 border bg-light">
+                       
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <button id="neuralButton" onclick="analyze('neurons')" class="btn btn-primary mb-2">Neural Network Analysis</button>
+                    <div id="box2" class="p-3 border bg-light">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
         
-        <button id="analyzeButton" onclick="analyze('test')" class="btn btn-primary">Test</button>
-        <button id="analyzeButton" onclick="analyze('regression')" class="btn btn-primary">Regression Analysis</button>
-        <button id="analyzeButton" onclick="analyze('neurons')" class="btn btn-primary">Neural Network Analysis</button>
+        <!-- <button id="analyzeButton" onclick="analyze('test')" class="btn btn-primary ">Test</button>
+        <button id="analyzeButton" onclick="analyze('regression')" class="btn btn-primary mb-2">Regression Analysis</button>
+        <button id="analyzeButton" onclick="analyze('neurons')" class="btn btn-primary mb-2">Neural Network Analysis</button>
 
         <div id="box1" class="bg-warning"></div>
         
-        <div id="box2" class="bg-success"></div>
+        <div id="box2" class="bg-success"></div> -->
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
 
@@ -142,7 +162,7 @@
                             loadImage(values[i], hash, name);
                         }
                     } else {
-                        // wait for 4 seconds and call the function again
+                        // wait for 12 seconds and call the function again
                         setTimeout(function(){
                             console.log('Waiting for 12 seconds')
                             ajaxCall(hash);
@@ -180,7 +200,7 @@
             const dataRows = document.querySelectorAll('tr.data-row');
             const imageDisplay = document.getElementById('imageDisplay');
             const nextImageButton = document.getElementById('nextImageButton');
-            const loadDoc = document.getElementById('analyzeButton');
+          //  const loadDoc = document.getElementById('analyzeButton');
 
 
             // if (nextImageButton) {
@@ -256,7 +276,7 @@
 
         });
 
-
+        
 
     </script>
 

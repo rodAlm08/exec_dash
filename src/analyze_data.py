@@ -121,7 +121,7 @@ def main(hash):
     for name, (best_model, model_name, _) in best_models.items():
         _, X_test, _, y_test = splits[name]
         y_pred = best_model.predict(X_test)
-        plt.rcParams.update({'figure.facecolor': 'red'})    
+        plt.rcParams.update({'figure.facecolor': 'white'})    
         plt.figure()
         plt.plot(range(len(y_test)), y_test.ravel(), label='Actual', linestyle='-', marker='o', color='blue')
         plt.plot(range(len(y_pred)), y_pred, label=f'Predicted - {model_name}', linestyle='--', marker='x', color='red')
