@@ -101,13 +101,13 @@
             <div class="row">
                 <div class="col-md-6 mb-4">
                     <button id="regressionButton" onclick="analyze('regression')" class="btn btn-primary mb-2">Regression Analysis</button>
-                    <div id="box1" class="p-3 border bg-light">
+                    <div id="box1" class="p-3 border" style="background-color: #f8d7da;">
                        
                     </div>
                 </div>
                 <div class="col-md-6 mb-4">
                     <button id="neuralButton" onclick="analyze('neurons')" class="btn btn-primary mb-2">Neural Network Analysis</button>
-                    <div id="box2" class="p-3 border bg-light">
+                    <div id="box2" class="p-3 border" style="background-color: #d4edda;">
                         
                     </div>
                 </div>
@@ -138,6 +138,7 @@
                         console.log(imageData);
 
                         ajaxCall(hash, analysisType);
+                        console.log('analysisType***************************:', analysisType);
                         
                     } else {
                         console.log('Failed to load image data');
@@ -149,6 +150,7 @@
         }
 
         function ajaxCall(hash, name){
+            console.log('name --------------------------------------------', name);
             let ajax = new XMLHttpRequest();
             ajax.onreadystatechange = function () {
                 if (ajax.readyState == 4 && ajax.status == 200) {
@@ -159,13 +161,14 @@
                     
                     if(keys && keys.length > 0){
                         for (let i = 0; i < values.length; i++) {
+                            
                             loadImage(values[i], hash, name);
                         }
                     } else {
                         // wait for 12 seconds and call the function again
                         setTimeout(function(){
                             console.log('Waiting for 12 seconds')
-                            ajaxCall(hash);
+                            ajaxCall(hash, name);
                         }, 12000);
                     }
                 } else {
@@ -182,6 +185,7 @@
             img.onload = function () {
                 //document.querySelector(".col-md-12").appendChild(img);
                 document.getElementById(name === "regressor" ? "box1" : "box2").appendChild(img);
+                console.log('name:*************************************', name);
                // document.getElementById("box").innerHTML += <img 
             };
             img.onerror = function () {
@@ -198,8 +202,8 @@
             const checkboxes = document.querySelectorAll('.column-checkbox');
             const rowsSelect = document.getElementById('rowsSelect');
             const dataRows = document.querySelectorAll('tr.data-row');
-            const imageDisplay = document.getElementById('imageDisplay');
-            const nextImageButton = document.getElementById('nextImageButton');
+            //const imageDisplay = document.getElementById('imageDisplay');
+           // const nextImageButton = document.getElementById('nextImageButton');
           //  const loadDoc = document.getElementById('analyzeButton');
 
 
