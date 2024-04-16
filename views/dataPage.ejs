@@ -100,23 +100,23 @@
         <div class="container py-5">
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <button id="regressionButton" onclick="analyze('regression')" class="btn btn-primary mb-2">Regression Analysis</button>
+                    <button id="regressionButton" onclick="analyze('regression')"
+                        class="btn btn-primary mb-2">Regression Analysis</button>
                     <div id="box1" class="p-3 border" style="background-color: #f8d7da;">
-                       
+
                     </div>
                 </div>
                 <div class="col-md-6 mb-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <button id="neuralButton" onclick="analyze('neurons')" class="btn btn-primary mb-2">Neural Network Analysis</button>
+
+                    <button id="neuralButton" onclick="analyze('neurons')" class="btn btn-primary mb-2">Neural Network
+                        Analysis</button>
                     <div id="box2" class="p-3 border" style="background-color: #d4edda;">
-                        
+
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- <button id="analyzeButton" onclick="analyze('test')" class="btn btn-primary ">Test</button>
         <button id="analyzeButton" onclick="analyze('regression')" class="btn btn-primary mb-2">Regression Analysis</button>
         <button id="analyzeButton" onclick="analyze('neurons')" class="btn btn-primary mb-2">Neural Network Analysis</button>
@@ -132,18 +132,38 @@
 
 
         function analyze(analysisType) {
+            var boxId = analysisType === 'regression' ? 'box1' : 'box2';
+            var box = document.getElementById(boxId);
+            box.innerHTML = ''; // Clear the box content
+
+            // Create and show loader with a message
+            var loader = document.createElement('div');
+            loader.className = 'spinner-border text-primary';
+            loader.role = 'status';
+            loader.style.marginRight = '5px'; // Add some spacing between the spinner and the text
+            var spinnerText = document.createElement('span');
+            spinnerText.className = 'visually-hidden';
+            spinnerText.textContent = 'Loading...';
+
+            var message = document.createElement('div');
+            message.textContent = 'Analysis in progress, please wait...';
+            message.className = 'd-flex align-items-center';
+            message.appendChild(loader);
+            message.appendChild(spinnerText);
+
+            box.appendChild(message);
+
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4) {
                     if (this.status == 200) {
                         let imageData = JSON.parse(this.responseText);
                         let hash = imageData.session;
-                        console.log(imageData);
+                        //console.log(imageData);
+                        ajaxCall(hash, analysisType);                       
 
-                        ajaxCall(hash, analysisType);
-                        //console.log('analysisType***************************:', analysisType);
-                        
                     } else {
+                        box.innerHTML = '<div class="alert alert-danger">Failed to initiate analysis. Please try again later.</div>';
                         console.log('Failed to load image data');
                     }
                 }
@@ -152,29 +172,34 @@
             xhttp.send();
         }
 
-        function ajaxCall(hash, name){
-            //console.log('name --------------------------------------------', name);
+        function ajaxCall(hash, name) {
+            var boxId = name === 'regression' ? 'box1' : 'box2';
+            var box = document.getElementById(boxId);
+
             let ajax = new XMLHttpRequest();
             ajax.onreadystatechange = function () {
-                if (ajax.readyState == 4 && ajax.status == 200) {
-                    let transactionData = JSON.parse(ajax.responseText);
-                    console.log(transactionData);
-                    let keys = Object.keys(transactionData);
-                    let values = Object.values(transactionData);
-                    
-                    if(keys && keys.length > 0){
-                        for (let i = 0; i < values.length; i++) {
-                            
-                            loadImage(values[i], hash, name);
+                if (ajax.readyState == 4) {                   
+                    if (ajax.status == 200) {
+                        let transactionData = JSON.parse(ajax.responseText);
+                        let keys = Object.keys(transactionData);
+                        let values = Object.values(transactionData);
+
+                        if (keys && keys.length > 0) {
+                            for (let i = 0; i < values.length; i++) {
+                                box.innerHTML = '';
+                                loadImage(values[i], hash, name);
+                            }
+                        } else {
+                           
+                            // wait for 10 seconds and call the function again
+                            setTimeout(function () {
+                                console.log('Waiting for 10 seconds')
+                                ajaxCall(hash, name);
+                            }, 10000);
                         }
-                    } else {
-                        // wait for 12 seconds and call the function again
-                        setTimeout(function(){
-                            console.log('Waiting for 10 seconds')
-                            ajaxCall(hash, name);
-                        }, 10000);
                     }
-                } else {
+
+                } else {                   
                     console.log('Failed to load transaction data');
                 }
             };
@@ -183,20 +208,16 @@
         }
 
         function loadImage(imageUrl, hash, name) {
-            var img = new Image();
+            var boxId = name === 'regression' ? 'box1' : 'box2';
+            var box = document.getElementById(boxId);
+
+            var img = new Image();            
             img.className = "img-fluid";
-            console.log(img);
-            img.onload = function () {
-                //document.querySelector(".col-md-12").appendChild(img);
-                var boxId = name === 'regression' ? 'box1' : 'box2';
-                //document.getElementById(boxId).innerHTML = '';  // Clear previous contents
-                document.getElementById(boxId).appendChild(img);
-                //document.getElementById(name === "regressor" ? "box1" : "box2").appendChild(img);
-                //console.log('name:*************************************', name);
-               // document.getElementById("box").innerHTML += <img 
+            img.onload = function () {               
+                box.appendChild(img);           
             };
             img.onerror = function () {
-                console.log('Failed to load image:', imageUrl);
+                box.innerHTML = '<div class="alert alert-danger">Failed to load image.</div>';
             };
             img.src = "http://54.236.30.169:4000/api/images/" + imageUrl;
             console.log(img.src);
@@ -210,8 +231,8 @@
             const rowsSelect = document.getElementById('rowsSelect');
             const dataRows = document.querySelectorAll('tr.data-row');
             //const imageDisplay = document.getElementById('imageDisplay');
-           // const nextImageButton = document.getElementById('nextImageButton');
-          //  const loadDoc = document.getElementById('analyzeButton');
+            // const nextImageButton = document.getElementById('nextImageButton');
+            //  const loadDoc = document.getElementById('analyzeButton');
 
 
             // if (nextImageButton) {
@@ -287,7 +308,7 @@
 
         });
 
-        
+
 
     </script>
 
