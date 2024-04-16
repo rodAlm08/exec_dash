@@ -71,11 +71,7 @@ def main(hash):
     results = []
     best_models = {}
     plot_paths = {}
-
-    # output_dir = os.path.join(hash)
-    # if not os.path.exists(output_dir):
-    #     os.makedirs(output_dir)
-
+   
     # Prepare a plot with subplots for model performance comparison
     fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(18, 12))
     axes = axes.flatten()  # Flatten to easily index them
@@ -135,6 +131,19 @@ def main(hash):
         actual_vs_predicted_path = actual_vs_predicted_path.replace("/tmp/", "")
         if name != "Model":
             plot_paths[name] = actual_vs_predicted_path
+
+    # plot the correlation matrix
+    correlation_matrix = dfClean.corr()
+    plt.figure(figsize=(10, 8))
+    plt.title('Correlation Matrix')
+    plt.imshow(correlation_matrix, cmap='viridis', interpolation='nearest')
+    plt.colorbar()
+    plt.xticks(range(len(correlation_matrix.columns)), correlation_matrix.columns, rotation=45)
+    plt.yticks(range(len(correlation_matrix.columns)), correlation_matrix.columns)
+    correlation_matrix_path = tempfile.gettempdir() + "/" + hash + "/correlation_matrix.png"
+    plt.savefig(correlation_matrix_path)
+    plt.close()
+    plot_paths['correlation_matrix'] = hash + "/correlation_matrix.png"
 
     return json.dumps(plot_paths)
 
