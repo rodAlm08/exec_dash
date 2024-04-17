@@ -160,7 +160,7 @@
                         let imageData = JSON.parse(this.responseText);
                         let hash = imageData.session;
                         //console.log(imageData);
-                        ajaxCall(hash, analysisType);                       
+                        ajaxCall(hash, analysisType);
 
                     } else {
                         box.innerHTML = '<div class="alert alert-danger">Failed to initiate analysis. Please try again later.</div>';
@@ -178,7 +178,7 @@
 
             let ajax = new XMLHttpRequest();
             ajax.onreadystatechange = function () {
-                if (ajax.readyState == 4) {                   
+                if (ajax.readyState == 4) {
                     if (ajax.status == 200) {
                         let transactionData = JSON.parse(ajax.responseText);
                         let keys = Object.keys(transactionData);
@@ -190,7 +190,7 @@
                                 loadImage(values[i], hash, name);
                             }
                         } else {
-                           
+
                             // wait for 10 seconds and call the function again
                             setTimeout(function () {
                                 console.log('Waiting for 10 seconds')
@@ -199,7 +199,7 @@
                         }
                     }
 
-                } else {                   
+                } else {
                     console.log('Failed to load transaction data');
                 }
             };
@@ -211,10 +211,10 @@
             var boxId = name === 'regression' ? 'box1' : 'box2';
             var box = document.getElementById(boxId);
 
-            var img = new Image();            
+            var img = new Image();
             img.className = "img-fluid";
-            img.onload = function () {               
-                box.appendChild(img);           
+            img.onload = function () {
+                box.appendChild(img);
             };
             img.onerror = function () {
                 box.innerHTML = '<div class="alert alert-danger">Failed to load image.</div>';

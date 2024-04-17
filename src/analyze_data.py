@@ -132,18 +132,29 @@ def main(hash):
         if name != "Model":
             plot_paths[name] = actual_vs_predicted_path
 
-    # plot the correlation matrix
     correlation_matrix = dfClean.corr()
     plt.figure(figsize=(10, 8))
     plt.title('Correlation Matrix')
-    plt.imshow(correlation_matrix, cmap='viridis', interpolation='nearest')
-    plt.colorbar()
+    sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap='viridis', cbar=True, square=True, linewidths=.5)
     plt.xticks(range(len(correlation_matrix.columns)), correlation_matrix.columns, rotation=45)
     plt.yticks(range(len(correlation_matrix.columns)), correlation_matrix.columns)
     correlation_matrix_path = tempfile.gettempdir() + "/" + hash + "/correlation_matrix.png"
     plt.savefig(correlation_matrix_path)
     plt.close()
     plot_paths['correlation_matrix'] = hash + "/correlation_matrix.png"
+
+    # # plot the correlation matrix
+    # correlation_matrix = dfClean.corr()
+    # plt.figure(figsize=(12, 10))    
+    # plt.title('Correlation Matrix')
+    # plt.imshow(correlation_matrix, cmap='viridis', interpolation='nearest')
+    # plt.colorbar()
+    # plt.xticks(range(len(correlation_matrix.columns)), correlation_matrix.columns, rotation=45)
+    # plt.yticks(range(len(correlation_matrix.columns)), correlation_matrix.columns)
+    # correlation_matrix_path = tempfile.gettempdir() + "/" + hash + "/correlation_matrix.png"
+    # plt.savefig(correlation_matrix_path)
+    # plt.close()
+    # plot_paths['correlation_matrix'] = hash + "/correlation_matrix.png"
 
     return json.dumps(plot_paths)
 

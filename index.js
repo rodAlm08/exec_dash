@@ -96,8 +96,8 @@ async function handleRequest(req, res) {
    try {
   //http://54.236.30.169:4000/
   if (req.query.submit === "filter") {
-    data = await fetchData("http://54.236.30.169:4000/api/dataset", headers);
-    //data = await fetchData("http://localhost:3000/api/dataset", headers);
+    //data = await fetchData("http://54.236.30.169:4000/api/dataset", headers);
+    data = await fetchData("http://localhost:3000/api/dataset", headers);
     totalCount = data.length;
   } else if (req.query.submit === "clean") {
     const queryString = constructQueryParamsString({
@@ -109,8 +109,8 @@ async function handleRequest(req, res) {
     totalCount = data.length;
     //console.log('apiUrl:', apiUrl);
   } else {
-    data = await fetchData("http://54.236.30.169:4000/api/dataset", headers);
-    //data = await fetchData("http://localhost:3000/api/dataset", headers);
+    //data = await fetchData("http://54.236.30.169:4000/api/dataset", headers);
+    data = await fetchData("http://localhost:3000/api/dataset", headers);
     totalCount = data.length;
     
   }
