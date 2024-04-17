@@ -161,8 +161,8 @@
                     }
                 }
             };
-            xhttp.open("GET", "http://54.236.30.169:4000/api/ai/" + analysisType);
-            //xhttp.open("GET", "http://localhost:3000/api/ai/" + analysisType);
+            //xhttp.open("GET", "http://54.236.30.169:4000/api/ai/" + analysisType);
+            xhttp.open("GET", "http://localhost:3000/api/ai/" + analysisType);
             xhttp.send();
         }
 
@@ -197,8 +197,8 @@
                     console.log('Failed to load transaction data');
                 }
             };
-            ajax.open("GET", "http://54.236.30.169:4000/api/transaction/" + hash);
-            //ajax.open("GET", "http://localhost:3000/api/transaction/" + hash);
+            //ajax.open("GET", "http://54.236.30.169:4000/api/transaction/" + hash);
+            ajax.open("GET", "http://localhost:3000/api/transaction/" + hash);
             ajax.send();
         }
 
@@ -214,9 +214,9 @@
             img.onerror = function () {
                 box.innerHTML = '<div class="alert alert-danger">Failed to load image.</div>';
             };
-            img.src = "http://54.236.30.169:4000/api/images/" + imageUrl;
+            //img.src = "http://54.236.30.169:4000/api/images/" + imageUrl;
             
-            //img.src = "http://localhost:3000/api/images/" + imageUrl;
+            img.src = "http://localhost:3000/api/images/" + imageUrl;
             console.log(img.src);
         }
 
