@@ -15,6 +15,7 @@ import requests
 import json
 import sys
 import tempfile
+import seaborn as sns
 
 
 load_dotenv("./.env")
