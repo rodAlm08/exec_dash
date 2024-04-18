@@ -286,7 +286,8 @@
         }
 
         function sendSyncCommand() {
-            const url = 'http://localhost:4200/dashboard';
+            //const url = 'http://localhost:4200/dashboard';
+            const url = 'http://54.236.30.169:4000/dashboard';
             const bodyData = { action: 'sync' };
             const bodyString = JSON.stringify(bodyData);
 
@@ -318,7 +319,8 @@
                 });
         }
         function sendResetCommand() {
-            const url = 'http://localhost:4200/dashboard';
+            //const url = 'http://localhost:4200/dashboard';
+            const url = 'http://54.236.30.169:4000/dashboard';
             const bodyData = { action: 'reset' };
             const bodyString = JSON.stringify(bodyData);
 

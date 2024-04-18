@@ -71,6 +71,7 @@ async function handleRequest(req, res, method) {
   const headers = { Authorization: `Bearer ${process.env.API_SECRET_KEY}` };
   if (method === "GET") {
     const baseEndpoint = "http://54.236.30.169:4000/api/dataset";
+    //const baseEndpoint = "http://localhost:3000/api/dataset";
     const currentPage = parseInt(req.query.page, 10) || 1;
     const page = parseInt(req.query.page, 10) || 1;
     const rows = parseInt(req.query.rows, 10) || 10;
@@ -140,7 +141,7 @@ async function handleRequest(req, res, method) {
         req.query
       );
       console.log("data length:", totalCount);
-      
+
       res.render("./dataPage", {
         data: filteredData,
         totalCount: totalCount,
