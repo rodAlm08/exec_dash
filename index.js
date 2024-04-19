@@ -70,8 +70,8 @@ async function handleRequest(req, res, method) {
   ];
   const headers = { Authorization: `Bearer ${process.env.API_SECRET_KEY}` };
   if (method === "GET") {
-    const baseEndpoint = "http://54.236.30.169:4000/api/dataset";
-    //const baseEndpoint = "http://localhost:3000/api/dataset";
+    //const baseEndpoint = "http://54.236.30.169:4000/api/dataset";
+    const baseEndpoint = "http://localhost:3000/api/dataset";
     const currentPage = parseInt(req.query.page, 10) || 1;
     const page = parseInt(req.query.page, 10) || 1;
     const rows = parseInt(req.query.rows, 10) || 10;
@@ -97,11 +97,11 @@ async function handleRequest(req, res, method) {
       console.log("data length:", totalCount);
       //http://54.236.30.169:4000/
       if (req.query.submit === "filter") {
-        data = await fetchData(
-          "http://54.236.30.169:4000/api/dataset",
-          headers
-        );
-        //data = await fetchData("http://localhost:3000/api/dataset", headers);
+        // data = await fetchData(
+        //   "http://54.236.30.169:4000/api/dataset",
+        //   headers
+        // );
+        data = await fetchData("http://localhost:3000/api/dataset", headers);
         totalCount = data.length;
       } else if (req.query.submit === "clean") {
         const queryString = constructQueryParamsString({
@@ -113,11 +113,11 @@ async function handleRequest(req, res, method) {
         totalCount = data.length;
         console.log("data length:", totalCount);
       } else {
-        data = await fetchData(
-          "http://54.236.30.169:4000/api/dataset",
-          headers
-        );
-        //data = await fetchData("http://localhost:3000/api/dataset", headers);
+        // data = await fetchData(
+        //   "http://54.236.30.169:4000/api/dataset",
+        //   headers
+        // );
+        data = await fetchData("http://localhost:3000/api/dataset", headers);
         totalCount = data.length;
       }
 
@@ -161,7 +161,8 @@ async function handleRequest(req, res, method) {
 
     switch (action) {
       case "sync":
-        const syncEndpoint = "http://54.236.30.169:4000/api/sync";
+        //const syncEndpoint = "http://54.236.30.169:4000/api/sync";
+        const syncEndpoint = "http://localhost:3000/api/sync";
         try {
           const syncData = await fetchData(syncEndpoint, headers);
           res.json(syncData);
@@ -172,7 +173,8 @@ async function handleRequest(req, res, method) {
         break;
 
       case "reset":
-        const resetEndpoint = "http://54.236.30.169:4000/api/reset";
+        //const resetEndpoint = "http://54.236.30.169:4000/api/reset";
+        const resetEndpoint = "http://localhost:3000/api/reset";
         try {
           const resetData = await fetchData(resetEndpoint, headers);
           res.json(resetData);
@@ -241,16 +243,6 @@ app.get("/python", async (req, res) => {
   res.json(json);
   //res.sendFile('C:/Users/rodri/repos/exec_dash/images/y_au_time.png');
 });
-
-// app.get("/dashboard", async (req, res) => {
-//   // if(Object.keys(req.body).length !== 0){
-//   //   console.log('req.body:', req.body);
-//   //   res.send('<h1>Dashboard</h1>');
-//   //   return;
-//   // }
-//   console.log("ai address:", process.env.AI_ADDRESS);
-//   await handleRequest(req, res);
-// });
 
 app.get("/dashboard", async (req, res) => {
   // Pass 'GET' as a method argument to handleRequest
