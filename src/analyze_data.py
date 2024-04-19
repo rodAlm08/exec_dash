@@ -22,6 +22,19 @@ load_dotenv("./.env")
 
 hash = sys.argv[1] 
 
+def plot_actual_vs_predicted(X, y, best_model, target_name, filename_suffix):
+    y_pred = best_model.predict(X)
+    plt.figure()
+    plt.plot(range(len(y)), y, label='Actual', linestyle='-', color='royalblue', linewidth=1)
+    plt.plot(range(len(y_pred)), y_pred, label=f'Predicted - {target_name}', linestyle='-', color='orangered', linewidth=1)
+    plt.title(f'{target_name} - Actual vs Predicted using {best_model.named_steps["clf"].__class__.__name__}')
+    plt.xlabel('Index')
+    plt.ylabel('Value')
+    plt.legend()
+    plt.savefig(filename_suffix)
+    plt.close()
+    
+    
 def main(hash):
     headers = {
     'Authorization': 'Bearer ' + os.getenv("API_SECRET_KEY")
@@ -112,8 +125,7 @@ def main(hash):
     plt.close()
     plot_paths['model_performance_comparison'] = hash + "/model_performance_comparison.png"
 
-    # Plot and save actual vs predicted for the best models
-    #change background color of plot
+    # Plot and save actual vs predicted for the best models  
     
     for name, (best_model, model_name, _) in best_models.items():
         _, X_test, _, y_test = splits[name]
@@ -126,12 +138,22 @@ def main(hash):
         plt.xlabel('Index')
         plt.ylabel('Value')
         plt.legend()
-        actual_vs_predicted_path = tempfile.gettempdir() + "/" + hash + f"/{name}_actual_vs_predicted.png"
+        actual_vs_predicted_path = tempfile.gettempdir() + "/" + hash + f"/{name}_actual_vs_predicted_test_data.png"
         plt.savefig(actual_vs_predicted_path)
         plt.close()
         actual_vs_predicted_path = actual_vs_predicted_path.replace("/tmp/", "")
         if name != "Model":
             plot_paths[name] = actual_vs_predicted_path
+            
+       
+    for target_name, scaled_target in scaled_targets.items():
+        best_model_info = best_models[target_name]
+        best_model = best_model_info[0]
+        actual_vs_predicted_path = f"{tempfile.gettempdir()}/{hash}/{target_name}_actual_vs_predicted_all_data.png"
+        plot_actual_vs_predicted(X, scaled_target, best_model, target_name, actual_vs_predicted_path)
+        plot_paths[target_name + '_actual_vs_predicted_all_data'] = f"{hash}/{target_name}_actual_vs_predicted_all_data.png"
+       
+
 
     correlation_matrix = dfClean.corr()
     plt.figure(figsize=(10, 8))
@@ -142,27 +164,8 @@ def main(hash):
     correlation_matrix_path = tempfile.gettempdir() + "/" + hash + "/correlation_matrix.png"
     plt.savefig(correlation_matrix_path)
     plt.close()
-    plot_paths['correlation_matrix'] = hash + "/correlation_matrix.png"
-
-    for name, (best_model, model_name, _) in best_models.items():
-        _, X_test, _, y_test = splits[name]
-        y_pred = best_model.predict(X_test)
-        plt.style.use('default')  
-        plt.figure()
-        plt.plot(range(len(y_test)), y_test.ravel(), label='Actual', linestyle='-',color='royalblue' ,linewidth=1)
-        plt.plot(range(len(y_pred)), y_pred, label=f'Predicted - {model_name}', linestyle='-', color='orangered' ,linewidth=1)
-        plt.title(f'{name} - Actual vs Predicted using {model_name}')
-        plt.xlabel('Index')
-        plt.ylabel('Value')
-        plt.legend()
-        actual_vs_predicted_path = tempfile.gettempdir() + "/" + hash + f"/{name}_actual_vs_predicted.png"
-        plt.savefig(actual_vs_predicted_path)
-        plt.close()
-        actual_vs_predicted_path = actual_vs_predicted_path.replace("/tmp/", "")
-
-    if name != "Model":
-        plot_paths[name] = actual_vs_predicted_path
-
+    plot_paths['correlation_matrix'] = hash + "/correlation_matrix.png"          
+    
 
     return json.dumps(plot_paths)
 
