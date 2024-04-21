@@ -246,36 +246,6 @@
             console.log(img.src);
         }
 
-        // function sendGetRequest() {
-        //     const url = 'http://localhost:4200/dashboard';
-        //     const bodyData = { command: 'sync' };
-
-        //     // Serialize body object to JSON string
-        //     const bodyString = JSON.stringify(bodyData);
-
-        //     // Send GET request with body
-        //     fetch(url, {
-        //         method: 'GET',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: bodyString
-        //     })
-        //         .then(response => {
-        //             if (!response.ok) {
-        //                 throw new Error('Network response was not ok');
-        //             }
-        //             return response.json();
-        //         })
-        //         .then(data => {
-        //             console.log('Response:', data);
-        //             // Handle response data as needed
-        //         })
-        //         .catch(error => {
-        //             console.error('There was a problem with the fetch operation:', error);
-        //         });
-        // }      
-
         function showModal() {
             document.getElementById('progressModal').style.display = 'block';
             document.getElementById('progressBar').style.width = '5%';
