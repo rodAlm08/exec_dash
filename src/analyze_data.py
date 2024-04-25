@@ -39,8 +39,8 @@ def main(hash):
     headers = {
     'Authorization': 'Bearer ' + os.getenv("API_SECRET_KEY")
     }
-    # df = pd.read_json(r'http://35.153.93.152:4000/api/dataset', storage_options=headers)
-    df = pd.read_json(r'https://zerofoutwo.net/api/dataset', storage_options=headers)
+    df = pd.read_json(r'http://54.236.48.243:4000/api/dataset', storage_options=headers)
+    # df = pd.read_json(r'https://zerofoutwo.net/api/dataset', storage_options=headers)
 
     unNeededColumns = ['_id', '_date', '_user', 'bm_HR_max', 'bm_act_steps']
     df.drop(unNeededColumns, axis=1, inplace=True)

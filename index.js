@@ -70,7 +70,7 @@ async function handleRequest(req, res, method) {
   ];
   const headers = { Authorization: `Bearer ${process.env.API_SECRET_KEY}` };
   if (method === "GET") {
-    //const baseEndpoint = "http://35.153.93.152:4000/api/dataset";
+    //const baseEndpoint = "http://54.236.48.243:4000/api/dataset";
     const baseEndpoint = "http://localhost:3000/api/dataset";
     const currentPage = parseInt(req.query.page, 10) || 1;
     const page = parseInt(req.query.page, 10) || 1;
@@ -95,10 +95,10 @@ async function handleRequest(req, res, method) {
       let data;
       var totalCount = 0;
       console.log("data length:", totalCount);
-      //http://35.153.93.152:4000/
+      //http://54.236.48.243:4000/
       if (req.query.submit === "filter") {
         // data = await fetchData(
-        //   "http://35.153.93.152:4000/api/dataset",
+        //   "http://54.236.48.243:4000/api/dataset",
         //   headers
         // );
         data = await fetchData("http://localhost:3000/api/dataset", headers);
@@ -114,7 +114,7 @@ async function handleRequest(req, res, method) {
         console.log("data length:", totalCount);
       } else {
         // data = await fetchData(
-        //   "http://35.153.93.152:4000/api/dataset",
+        //   "http://54.236.48.243:4000/api/dataset",
         //   headers
         // );
         data = await fetchData("http://localhost:3000/api/dataset", headers);
@@ -161,7 +161,7 @@ async function handleRequest(req, res, method) {
 
     switch (action) {
       case "sync":
-        //const syncEndpoint = "http://35.153.93.152:4000/api/sync";
+        //const syncEndpoint = "http://54.236.48.243:4000/api/sync";
         const syncEndpoint = "http://localhost:3000/api/sync";
         try {
           const syncData = await fetchData(syncEndpoint, headers);
@@ -173,7 +173,7 @@ async function handleRequest(req, res, method) {
         break;
 
       case "reset":
-        //const resetEndpoint = "http://35.153.93.152:4000/api/reset";
+        //const resetEndpoint = "http://54.236.48.243:4000/api/reset";
         const resetEndpoint = "http://localhost:3000/api/reset";
         try {
           const resetData = await fetchData(resetEndpoint, headers);
