@@ -13,6 +13,13 @@ have any direct relationship with their performance in such gaming scenarios?
 different game scenarios?
 Year 4 Project/Minor Dissertation
 
+
+## Screencast Demonstration
+`videos/Final_Year_recording.mp4`
+
+[Final Year Project Screencast Demonstration](videos/Final_Year_recording.mp4)
+
+
 ## Project Summary
 
 The diagram below gives a summary of objectives to be achieved towards the successful completion of the project. 
@@ -217,3 +224,19 @@ server {
 
 `npm install --global mocha`
 
+## Appendices:
+
+- **Frontend Repository:** https://github.com/rodAlm08/exec_dash.git
+
+- **Backend Repository:** https://github.com/intotito/applied_project.git
+
+- **Documentation Repository:** https://github.com/rodAlm08/Final_Project_Dissertation.git
+
+- **Abandoned Frontend Repository:** https://github.com/rodAlm08/Executive_Dashboard.git
+
+- **Screencast Demonstration:**  [Final Year Project Demonstration](videos/Final_Year_recording.mp4)
+
+[![Screencast Demonstration](./images/thumbnail.png)](https://atlantictu.sharepoint.com/:v:/s/Student-Year3Project/Ec00e-vwu2BPn4_7Q2HVynYBERmvVTrXGPsoNKjCePZF5w?e=hLNgXZ)
+
+---
+_This project was developed by Rodrigo Almeida and Otito Mbelu as part of the academic work at Atlantic Technological University (ATU), Galway._
