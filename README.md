@@ -20,7 +20,7 @@ Year 4 Project/Minor Dissertation
 [Final Year Project Screencast Demonstration - Download](./videos/Final_Year_recording.mp4)
 
 
-[Final Year Project Screencast Demonstration - Stream](https://atlantictu.sharepoint.com/:v:/s/Student-Year3Project/Ec00e-vwu2BPn4_7Q2HVynYBERmvVTrXGPsoNKjCePZF5w?e=hLNgXZ)
+[![Screencast Demonstration - Stream](./images/thumbnail.png)](https://atlantictu.sharepoint.com/:v:/s/Student-Year3Project/Ec00e-vwu2BPn4_7Q2HVynYBERmvVTrXGPsoNKjCePZF5w?e=hLNgXZ)
 
 
 ## Project Summary
